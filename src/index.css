@@ -174,6 +174,16 @@ header {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  position: relative;
+  z-index: 5;
+  transition: width 0.3s ease, padding 0.3s ease;
+}
+
+.sidebar-closed .sidebar {
+  width: 0;
+  padding: 0;
+  overflow: hidden;
+  border-right: none;
 }
 
 .nav-links {
@@ -198,6 +208,39 @@ header {
 .main-content {
   flex: 1;
   overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 50;
+  background: var(--bg-pane);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-open .sidebar-toggle {
+  display: none; /* Hide toggle when sidebar is open */
+}
+
+/* Add padding to the toggle button space when closed */
+.sidebar-closed .playground-layout,
+.sidebar-closed .tutorial-container {
+  padding-left: 4rem;
 }
 
 /* Tutorial Layout */

@@ -13,7 +13,10 @@ const Tooltip = ({ word, text, children }: { word: string; text?: string; childr
     "sticky subjects": "Moon remembers what you were just talking about for logical operations, so you don't have to repeat the variable name (e.g. x < 100 and is not 30).",
     "comprehensions": "A quick, one-line way to build a new list by filtering or modifying an existing list or range.",
     "phrasal": "Written like a natural English sentence, rather than typical computer code.",
-    "multiple dispatch": "Writing multiple versions of the same function, and letting Moon automatically pick the right one based on the type of data you give it."
+    "multiple dispatch": "Writing multiple versions of the same function, and letting Moon automatically pick the right one based on the type of data you give it.",
+    "instantiate": "To bring a blueprint to life by creating an actual working copy of it in memory.",
+    "index": "The numbered position of an item in a list (starting from 1 in Moon).",
+    "blueprint": "A custom template (or 'type') that defines how a piece of data should look and behave."
   };
 
   const definition = definitions[word.toLowerCase()] || "Definition not found.";
@@ -105,14 +108,16 @@ show combined`} />
             <ul>
               <li>Use <code>set</code> when you want to change a variable's value (<Tooltip word="assignment" />).</li>
               <li>Use <code>update</code> when you want to perform math on a variable.</li>
-              <li>Use <code>add</code> when you want to <Tooltip word="appends" text="append" /> items to the end of a list.</li>
+              <li>Use <code>add</code> to mathematically add numbers together, stitch text strings together, or to <Tooltip word="appends" text="append" /> items to the end of a list!</li>
             </ul>
             <CodeRunner initialCode={`let hp be 100
 update hp - 20
-show "Took damage! HP is now: \`hp\`"
+add 10 to hp
+show "HP is now: \`hp\`"
 
-set hp to 100
-show "Healed back to full: \`hp\`"
+let greeting be "Hello"
+add " World!" to greeting
+show greeting
 
 let inventory be []
 add "sword", "shield" to inventory
@@ -121,20 +126,23 @@ show inventory`} />
         </details>
 
         <details className="tutorial-chapter">
-          <summary>6. Control Flow</summary>
+          <summary>6. Control Flow & Blocks</summary>
           <div className="chapter-content">
-            <p>Sometimes you only want code to run if a certain condition is met. This is where <code>if</code>, <code>else if</code>, and <code>else</code> come in. When you start a block of code, you open it with a colon <code>:</code> and you must always close it with the <code>end</code> keyword. You can also use the handy <code>unless</code> keyword at the end of a line!</p>
+            <p>Sometimes you only want code to run if a certain condition is met. This is where <code>if</code>, <code>else if</code>, and <code>else</code> come in. If you have multiple things to do, you can open a block using a colon <code>:</code> and close it with the <code>end</code> keyword.</p>
+            <p>But here's a secret: if you only have a single statement to execute, you can skip the block entirely! Moon also provides the intuitive opposite of <code>if</code>: <code>unless</code>. These can even be placed at the end of a line!</p>
             <CodeRunner initialCode={`let power be 50
 
+# A multi-line block requires a colon and an 'end'
 if power > 70:
   show "You are very strong."
-else if power > 30:
-  show "You are average."
-else:
-  show "You are weak."
+  show "You are ready for battle."
 end
 
-show "Danger!" unless power > 20`} />
+# A single statement doesn't need a block!
+if power <= 70 show "You are weak."
+
+# 'unless' is the exact opposite of 'if'
+unless power > 70 show "You need to train more!"`} />
           </div>
         </details>
 
@@ -175,9 +183,39 @@ show "Your grade is: \`grade\`"`} />
         </details>
 
         <details className="tutorial-chapter">
-          <summary>10. Loops, Unpacking, and Comprehensions</summary>
+          <summary>10. Loop Foundations</summary>
           <div className="chapter-content">
-            <p>When you have a collection, you usually want to loop over its items. Moon provides <code>for each</code> loops and <code>until</code> loops. But for the ultimate shortcut, you can use <Tooltip word="Comprehensions" text="comprehensions" />! These allow you to rapidly build a brand new list or dictionary by filtering an existing one in just a few lines of code.</p>
+            <p>When you have a collection or range, you usually want to loop over it. Moon provides incredibly flexible <code>for</code> loops.</p>
+            <ul>
+              <li>The word <code>each</code> is completely optional—use it if it helps the sentence read better!</li>
+              <li>Use <code>in</code> when iterating over a collection (like a list), and <code>from</code> when iterating over a numeric range.</li>
+              <li>You can unpack multiple values at once! E.g. <code>for value, <Tooltip word="index">index</Tooltip> in ...</code> to grab both the item and its numbered position.</li>
+            </ul>
+            <p>For condition-based loops, Moon offers <code>while</code> and its natural opposite, <code>until</code>.</p>
+            <CodeRunner initialCode={`let items be ["apple", "banana"]
+
+# Unpacking both the value and its index
+for each food, i in items:
+  show "Item \`i\` is \`food\`."
+end
+
+# 'each' is optional! Notice 'from' for ranges:
+for i from 1 to 3:
+  show "Count: \`i\`"
+end
+
+let p be 1
+until p > 2:
+  show "Loop tick: \`p\`"
+  update p + 1
+end`} />
+          </div>
+        </details>
+
+        <details className="tutorial-chapter">
+          <summary>11. Comprehensions</summary>
+          <div className="chapter-content">
+            <p>Once you've mastered loops, you can unlock the ultimate shortcut: <Tooltip word="Comprehensions" text="comprehensions" />! These allow you to rapidly build a brand new list or dictionary by filtering an existing one in just a single line of code.</p>
             <CodeRunner initialCode={`# Building a list of even numbers from a range
 let evens be [for each x in 1 to 10 keep x if is not 5]
 show "Evens without 5: " + evens
@@ -189,20 +227,14 @@ let dict be {
     keep file: index * 10
   end
 }
-show dict
-
-let p be 1
-until p > 3:
-  show "Loop tick: \`p\`"
-  update p + 1
-end`} />
+show dict`} />
           </div>
         </details>
 
         <details className="tutorial-chapter">
-          <summary>11. Blueprints, Instantiation & Cloning</summary>
+          <summary>12. Blueprints, Instantiation & Cloning</summary>
           <div className="chapter-content">
-            <p>Now we enter advanced territory! If lists and dictionaries aren't enough, you can create your own custom data blueprints using the <code>type</code> keyword. Once defined, you can bring them to life (instantiate them) using <code>with ... end</code>. You can even embed special commands right inside the blueprint, like "active properties" which run code when you ask for them!</p>
+            <p>Now we enter advanced territory! If lists and dictionaries aren't enough, you can create your own custom data <Tooltip word="blueprint">blueprints</Tooltip> using the <code>type</code> keyword. Once defined, you can <Tooltip word="instantiate">instantiate</Tooltip> them using <code>with ... end</code>. You can even embed special commands right inside the blueprint, like "active properties" which run code when you ask for them!</p>
             <CodeRunner initialCode={`type Player:
   name, health: 100,
   my info:
@@ -221,7 +253,7 @@ show p1's info`} />
         </details>
 
         <details className="tutorial-chapter">
-          <summary>12. Phrasal Functions & Multiple Dispatch</summary>
+          <summary>13. Phrasal Functions & Multiple Dispatch</summary>
           <div className="chapter-content">
             <p>Functions in Moon are written as natural language <Tooltip word="phrasal">phrases</Tooltip>, making them incredibly easy to read. Even better, you can use <Tooltip word="Multiple Dispatch" text="multiple dispatch" /> to write the exact same phrase multiple times, but have it do completely different things depending on the <code>type</code> of data you feed it!</p>
             <CodeRunner initialCode={`type Node: ip end
@@ -246,9 +278,9 @@ breach system fw`} />
         </details>
 
         <details className="tutorial-chapter">
-          <summary>13. Advanced Slicing & Access</summary>
+          <summary>14. Advanced Slicing & Access</summary>
           <div className="chapter-content">
-            <p>To wrap things up, here are some pro-tips for working with <Tooltip word="lists" />. Moon provides incredibly clean syntax for manipulating lists. You can use the <code>end</code> keyword in slices to grab everything up to the end, or even slice backwards! You can also use a quick dot-notation for grabbing items by their 1-based index without using brackets.</p>
+            <p>To wrap things up, here are some pro-tips for working with <Tooltip word="lists" />. Moon provides incredibly clean syntax for manipulating lists. You can use the <code>end</code> keyword in slices to grab everything up to the end, or even slice backwards! You can also use a quick dot-notation for grabbing items by their 1-based <Tooltip word="index">index</Tooltip> without using brackets.</p>
             <CodeRunner initialCode={`let items be [ 10, 20, 30, 40, 50 ]
 
 # Quick 1-indexed bracketless access
