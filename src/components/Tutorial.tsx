@@ -46,10 +46,17 @@ let is_active be true
 let nothing be nil
 
 # Multiple assignments at once!
-let a, b be [ ]
+let a, b, c be 50
 
-show name + " is " + age
-show a`
+# Assignments to different variables at once
+let x, y, z be 10, 20, 30
+
+show name
+show age
+show a
+
+# You can show the other variables below
+`
   },
   {
     title: "String Interpolation",
@@ -62,7 +69,7 @@ show "The square of \`number\` is \`number * number\`!"`
   {
     title: "Native Phrases (Standard Library)",
     content: (
-      <p>Moon comes with built-in <Tooltip word="phrasal">phrasal functions</Tooltip> that read like natural English! You can use <code>random from X to Y</code>, <code>floor of</code>, <code>uppercase</code>, and <code>lowercase</code>.<br/><br/>Moon also features the incredible <code>ask</code> command, which pauses your program, prompts the user for input right here in the terminal, and waits for their response! Try it out below!</p>
+      <p>Moon comes with built-in <Tooltip word="phrasal">phrasal functions</Tooltip> that read like natural English! You can use <code>random from X to Y</code>, <code>floor of</code>, <code>uppercase</code>, and <code>lowercase</code>.<br /><br />Moon also features the incredible <code>ask</code> command, which pauses your program, prompts the user for input right here in the terminal, and waits for their response! Try it out below!</p>
     ),
     code: `let name be ask "What is your name? "
 let choice be random from 1 to 10
@@ -303,7 +310,7 @@ show "Backwards: \`backwards\`"`
 
 export default function Tutorial() {
   const location = useLocation();
-  
+
   useEffect(() => {
     const hash = location.hash;
     if (hash) {
