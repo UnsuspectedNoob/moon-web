@@ -1,21 +1,128 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Code, BookOpen, Play, Loader2, Zap } from 'lucide-react';
+import { Code, BookOpen, Play, Loader2, Zap, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
 // @ts-ignore
 import MoonModule from '../moon.js';
+
+const showcases = [
+  {
+    title: 'max.moon',
+    code: `let max of (a: Number) and (b: Number):
+  give a if a > b else b
+end
+
+let x, y be 40, 30
+show "Max of \`x\` and \`y\` is \`max of x and y\`"`
+  },
+  {
+    title: 'palindrome.moon',
+    code: `# ---------------------------------------------------------
+# PALINDROME
+# Showcases Moon's elegant phrasal standard library:
+# split, reverse, and join.
+# ---------------------------------------------------------
+let isPalindrome (word):
+  let rev_chars be reverse word as List
+  let rev_word be join rev_chars with ""
+
+  give word is rev_word
+end
+
+show "--- Palindrome Algorithm ---"
+show "Is 'racecar' a palindrome?"
+show isPalindrome ("racecar")
+
+show "Is 'moon' a palindrome?"
+show isPalindrome ("moon")`
+  },
+  {
+    title: 'merge_sort.moon',
+    code: `let merge (left: List) with (right: List):
+  let total be [ ]
+  let i, j be 1
+
+  let leftLen be left's length
+  let rightLen be right's length
+
+  until i > leftLen or j > rightLen:
+    if left[i] < right[j]:
+      add left[i] to total
+      update i + 1
+    else:
+      add right[j] to total
+      update j + 1
+    end
+  end
+
+  add left[i to end] to total unless i > leftLen
+  add right[j to end] to total unless j > rightLen
+
+  give total
+end
+
+let a sorted (list: List):
+  if list's length < 2
+    give list
+
+  let left be list[1 to end / 2]
+  let right be list[end / 2 + 1 to end]
+
+  give merge (a sorted left) with (a sorted right)
+end
+
+let list be [ 5, 3, 10, 8, 2, 1, 15, 7, 14, 4 ]
+show a sorted list`
+  },
+  {
+    title: 'fibonacci.moon',
+    code: `# ---------------------------------------------------------
+# ITERATIVE FIBONACCI
+# Showcases Moon's action statements, fast VM math, 
+# and robust 'for' loops.
+# ---------------------------------------------------------
+let fib_iterative (n):
+  if n <= 1:
+    give n
+  end
+
+  let a be 0
+  let b be 1
+
+  for i from 2 to n by 1:
+    let temp be a + b
+    set a to b
+    set b to temp
+  end
+
+  give b
+end
+
+show "--- Fibonacci Algorithm ---"
+show "Iterative (n=50):"
+show fib_iterative (50)`
+  }
+];
 
 export default function Home() {
   const [showOutput, setShowOutput] = useState(false);
   const [engine, setEngine] = useState<any>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
+  const [currentShowcaseIndex, setCurrentShowcaseIndex] = useState(0);
 
-  const showcaseCode = `let max of (a: Number) and (b: Number):
-  give a if a > b else b
-end
+  const currentShowcase = showcases[currentShowcaseIndex];
 
-let x, y be 40, 30
-show "Max of \`x\` and \`y\` is \`max of x and y\`"`;
+  const handleNext = () => {
+    setCurrentShowcaseIndex((prev) => (prev + 1) % showcases.length);
+    setLogs([]);
+    setShowOutput(false);
+  };
+
+  const handlePrev = () => {
+    setCurrentShowcaseIndex((prev) => (prev - 1 + showcases.length) % showcases.length);
+    setLogs([]);
+    setShowOutput(false);
+  };
 
   useEffect(() => {
     let instance: any = null;
@@ -40,13 +147,13 @@ show "Max of \`x\` and \`y\` is \`max of x and y\`"`;
     setShowOutput(true);
     setLogs([]);
     setIsRunning(true);
-    
+
     try {
       if (engine._setCompilerFlags) {
         engine._setCompilerFlags(false, false, false, false);
       }
       const executeMoonCode = engine.cwrap('executeMoonCode', 'void', ['string'], { async: true });
-      await executeMoonCode(showcaseCode);
+      await executeMoonCode(currentShowcase.code);
     } catch (e: any) {
       setLogs(prev => [...prev, "Fatal Error: " + e.message]);
     } finally {
@@ -120,28 +227,45 @@ show "Max of \`x\` and \`y\` is \`max of x and y\`"`;
               <span className="w-3 h-3 rounded-full bg-yellow-500/80"></span>
               <span className="w-3 h-3 rounded-full bg-green-500/80"></span>
             </div>
-            <div className="text-xs font-mono text-moon-muted tracking-wider">max.moon</div>
-            <button 
+            <div className="flex items-center gap-3">
+              <button onClick={handlePrev} className="text-moon-muted hover:text-white transition-colors" title="Previous Example">
+                <ChevronLeft size={16} />
+              </button>
+              <div className="text-xs font-mono text-moon-muted tracking-wider min-w-[140px] text-center">
+                {currentShowcase.title}
+              </div>
+              <button onClick={handleNext} className="text-moon-muted hover:text-white transition-colors" title="Next Example">
+                <ChevronRight size={16} />
+              </button>
+            </div>
+            <button
               className="absolute right-4 flex items-center gap-1.5 px-3 py-1.5 bg-moon-accent/10 border border-moon-accent/30 text-moon-accent text-xs font-bold rounded-lg hover:bg-moon-accent/20 hover:-translate-y-[1px] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-              onClick={runShowcase} 
+              onClick={runShowcase}
               disabled={!engine || isRunning}
             >
               {isRunning ? <Loader2 className="animate-spin" size={14} /> : <Play size={14} />} Run
             </button>
           </div>
-          <pre className="p-4 md:p-6 overflow-x-auto">
+          <pre className="p-4 md:p-6 overflow-x-auto min-h-[300px]">
             <code className="font-mono text-sm md:text-base leading-relaxed text-slate-200">
-              {showcaseCode}
+              {currentShowcase.code}
             </code>
           </pre>
-          
+
           <div className={`bg-moon-pane border-t border-white/5 ${showOutput ? 'block animate-slide-down' : 'hidden'}`}>
-            <div className="px-6 py-2 text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 bg-[#020617] border-b border-white/5">
-              Console Output
+            <div className="px-6 py-2 flex items-center justify-between text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 bg-[#020617] border-b border-white/5">
+              <span>Console Output</span>
+              <button 
+                onClick={() => { setLogs([]); setShowOutput(false); }}
+                className="flex items-center gap-1.5 hover:text-rose-400 transition-colors"
+                title="Clear Output"
+              >
+                <Trash2 size={14} /> Clear
+              </button>
             </div>
             <div className="p-4 md:p-6 font-mono text-sm md:text-base text-slate-200 flex flex-col gap-2 min-h-[100px]">
               {logs.map((log, i) => (
-                <div key={i} className="animate-fade-in" dangerouslySetInnerHTML={{__html: log}} />
+                <div key={i} className="animate-fade-in" dangerouslySetInnerHTML={{ __html: log }} />
               ))}
               {!isRunning && logs.length === 0 && showOutput && (
                 <div className="text-slate-500 animate-fade-in">No output produced.</div>
@@ -153,15 +277,15 @@ show "Max of \`x\` and \`y\` is \`max of x and y\`"`;
         {/* Footer */}
         <footer className="mt-12 text-center pb-8 border-t border-white/5 pt-8">
           <p className="text-moon-muted text-sm flex items-center justify-center gap-2">
-            View the core C engine source code on 
-            <a 
-              href="https://github.com/UnsuspectedNoob/moon" 
-              target="_blank" 
+            View the C source code on
+            <a
+              href="https://github.com/UnsuspectedNoob/moon"
+              target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-white hover:text-moon-accent font-semibold transition-colors"
             >
               <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
-                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
               </svg>
               GitHub
             </a>
