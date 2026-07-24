@@ -25,10 +25,10 @@ const Tooltip = ({ word, text, children }: { word: string; text?: string; childr
   const displayText = children || text || word;
 
   return (
-    <span className="tooltip-wrapper">
+    <span className="relative group inline-block cursor-help border-b border-dashed border-moon-accent text-moon-accent hover:bg-moon-accent/10 transition-colors rounded px-1">
       {displayText}
-      <span className="tooltip-box">
-        <strong>{word}</strong>: {definition}
+      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-moon-pane border border-moon-border text-white text-sm rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 pointer-events-none before:content-[''] before:absolute before:top-full before:left-1/2 before:-translate-x-1/2 before:border-4 before:border-transparent before:border-t-moon-border">
+        <strong className="text-moon-accent">{word}</strong>: {definition}
       </span>
     </span>
   );
@@ -107,7 +107,7 @@ show combined`
     content: (
       <>
         <p>We've created variables and collections, but how do we change them? Most programming languages use confusing math symbols (like <code>+=</code>), but Moon prefers clear English verbs.</p>
-        <ul>
+        <ul className="list-disc pl-6 my-4 space-y-2 text-slate-300">
           <li>Use <code>set</code> when you want to change a variable's value (<Tooltip word="assignment" />).</li>
           <li>Use <code>update</code> when you want to perform math on a variable.</li>
           <li>Use <code>add</code> to mathematically add numbers together, stitch text strings together, or to <Tooltip word="appends" text="append" /> items to the end of a list!</li>
@@ -205,7 +205,7 @@ end`
     content: (
       <>
         <p>When you have a collection or range, you usually want to loop over it. Moon provides incredibly flexible <code>for</code> loops.</p>
-        <ul>
+        <ul className="list-disc pl-6 my-4 space-y-2 text-slate-300">
           <li>The word <code>each</code> is completely optional—use it if it helps the sentence read better!</li>
           <li>Use <code>in</code> when iterating over a collection (like a list), and <code>from</code> when iterating over a numeric range.</li>
           <li>You can unpack multiple values at once! E.g. <code>for value, <Tooltip word="index">index</Tooltip> in ...</code> to grab both the item and its numbered position.</li>
@@ -325,18 +325,23 @@ export default function Tutorial() {
   }, [location.hash]);
 
   return (
-    <div className="tutorial-container">
-      <header className="tutorial-header">
-        <h2>Moon Syntax Guide</h2>
-        <p>Welcome to the definitive guide to the Moon programming language. The examples below are fully interactive!</p>
+    <div className="w-full max-w-5xl mx-auto px-4 md:px-8 py-8 md:py-12">
+      <header className="mb-12 border-b border-white/10 pb-8">
+        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4">Moon Syntax Guide</h2>
+        <p className="text-moon-muted text-lg md:text-xl max-w-2xl">Welcome to the definitive guide to the Moon programming language. The examples below are fully interactive!</p>
       </header>
 
-      <div className="tutorial-content">
+      <div className="tutorial-content flex flex-col gap-6">
         {chapters.map((chapter, i) => (
-          <details key={i} className="tutorial-chapter" id={`chapter-${i}`} open={i === 0}>
-            <summary>{i + 1}. {chapter.title}</summary>
-            <div className="chapter-content">
-              {chapter.content}
+          <details key={i} className="group bg-moon-pane border border-moon-border rounded-2xl overflow-hidden shadow-lg transition-all" id={`chapter-${i}`} open={i === 0}>
+            <summary className="p-5 md:p-6 text-xl md:text-2xl font-bold text-white cursor-pointer select-none list-none flex justify-between items-center hover:bg-white/5 transition-colors">
+              <span><span className="text-moon-accent mr-3">{i + 1}.</span> {chapter.title}</span>
+              <span className="transform group-open:rotate-180 transition-transform text-moon-muted">▼</span>
+            </summary>
+            <div className="p-5 md:p-6 pt-0 border-t border-white/5 bg-[#020617]/50 mt-2">
+              <div className="text-slate-200 text-base md:text-lg mb-8 leading-relaxed">
+                {chapter.content}
+              </div>
               <CodeRunner initialCode={chapter.code} />
             </div>
           </details>

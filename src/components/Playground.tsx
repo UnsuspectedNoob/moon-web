@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 // @ts-ignore
 import MoonModule from '../moon.js';
 import ASTViewer from './ASTViewer';
+import { Play } from 'lucide-react';
 
 export default function Playground() {
   const [code, setCode] = useState('let message be "Hello from WebAssembly!"\nshow message\n\nlet count be 1\nfor i from 1 to 5:\n  show "Counting: `count`"\n  update count + 1\nend\n');
@@ -107,78 +108,87 @@ export default function Playground() {
 
   const ansiToHtml = (text: string) => {
     let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    html = html.replace(/\x1b\[1;31m/g, '<span style="color: #f43f5e; font-weight: bold;">')
-      .replace(/\x1b\[1;32m/g, '<span style="color: #10b981; font-weight: bold;">')
-      .replace(/\x1b\[1;33m/g, '<span style="color: #f59e0b; font-weight: bold;">')
-      .replace(/\x1b\[1;36m/g, '<span style="color: #38bdf8; font-weight: bold;">')
-      .replace(/\x1b\[90m/g, '<span style="color: #94a3b8;">')
+    html = html.replace(/\x1b\[1;31m/g, '<span class="text-moon-error font-bold">')
+      .replace(/\x1b\[1;32m/g, '<span class="text-emerald-500 font-bold">')
+      .replace(/\x1b\[1;33m/g, '<span class="text-amber-500 font-bold">')
+      .replace(/\x1b\[1;36m/g, '<span class="text-moon-accent font-bold">')
+      .replace(/\x1b\[90m/g, '<span class="text-moon-muted">')
       .replace(/\x1b\[0m/g, '</span>');
-    html = html.replace(/\[1;31m/g, '<span style="color: #f43f5e; font-weight: bold;">')
-      .replace(/\[1;32m/g, '<span style="color: #10b981; font-weight: bold;">')
-      .replace(/\[1;33m/g, '<span style="color: #f59e0b; font-weight: bold;">')
-      .replace(/\[1;36m/g, '<span style="color: #38bdf8; font-weight: bold;">')
-      .replace(/\[90m/g, '<span style="color: #94a3b8;">')
+    html = html.replace(/\[1;31m/g, '<span class="text-moon-error font-bold">')
+      .replace(/\[1;32m/g, '<span class="text-emerald-500 font-bold">')
+      .replace(/\[1;33m/g, '<span class="text-amber-500 font-bold">')
+      .replace(/\[1;36m/g, '<span class="text-moon-accent font-bold">')
+      .replace(/\[90m/g, '<span class="text-moon-muted">')
       .replace(/\[0m/g, '</span>');
     return { __html: html };
   };
 
   return (
-    <div className="playground-layout">
-      <header className="playground-header">
-        <div className="header-left">
-          <h2>Interactive Playground</h2>
-        </div>
-        <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <label className="toggle-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.9rem' }}>
+    <div className="flex flex-col h-full bg-moon-bg">
+      <header className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 border-b border-white/5 gap-4">
+        <h2 className="text-xl font-bold tracking-tight">Interactive Playground</h2>
+        <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+          <label className="flex items-center gap-2 text-sm text-moon-muted cursor-pointer hover:text-white transition-colors">
             <input 
               type="checkbox" 
               checked={showAST} 
-              onChange={e => setShowAST(e.target.checked)} 
+              onChange={e => setShowAST(e.target.checked)}
+              className="accent-moon-accent w-4 h-4"
             />
             Parse AST
           </label>
-          <button className="run-btn" onClick={runCode} disabled={!engine || isWaitingInput}>Run Code</button>
+          <button 
+            className="flex items-center gap-2 px-4 py-2 bg-moon-accent text-[#020617] font-bold rounded-lg hover:bg-moon-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+            onClick={runCode} 
+            disabled={!engine || isWaitingInput}
+          >
+            <Play size={16} /> Run Code
+          </button>
         </div>
       </header>
-      <main className="split-view">
-        <div className="editor-pane">
-          <div className="pane-header">Source Code</div>
-          <div className="editor-scroll-container">
+      
+      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
+        {/* Editor Pane */}
+        <div className="flex flex-col flex-1 h-[50vh] lg:h-full border-b lg:border-b-0 lg:border-r border-white/5 min-w-0">
+          <div className="px-4 py-2 text-xs font-mono font-bold tracking-widest text-moon-muted uppercase bg-moon-pane border-b border-white/5">
+            Source Code
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 bg-[#0a0f1d]">
             <textarea
               value={code}
               onChange={e => setCode(e.target.value)}
               spellCheck="false"
               autoComplete="off"
-              className="code-editor"
-              rows={Math.max(code.split('\n').length, 15)}
+              className="w-full h-full min-h-[300px] bg-transparent text-slate-200 font-mono text-sm leading-relaxed outline-none resize-none"
             />
           </div>
         </div>
-        <div className="console-pane">
-          <div className="pane-tabs" style={{ display: 'flex', borderBottom: '1px solid #334155', backgroundColor: '#0f172a' }}>
+
+        {/* Console Pane */}
+        <div className="flex flex-col flex-1 h-[50vh] lg:h-full min-w-0 bg-[#020617]">
+          <div className="flex border-b border-white/5 bg-moon-pane">
             <button 
-              className={`tab-btn ${activeTab === 'output' ? 'active' : ''}`}
+              className={`px-6 py-2.5 text-sm font-semibold border-b-2 transition-colors ${activeTab === 'output' ? 'border-moon-accent text-white' : 'border-transparent text-moon-muted hover:text-white'}`}
               onClick={() => setActiveTab('output')}
-              style={{ padding: '0.75rem 1.5rem', background: 'none', border: 'none', borderBottom: activeTab === 'output' ? '2px solid #38bdf8' : '2px solid transparent', color: activeTab === 'output' ? '#e2e8f0' : '#64748b', cursor: 'pointer', outline: 'none' }}
             >
               Output
             </button>
             <button 
-              className={`tab-btn ${activeTab === 'ast' ? 'active' : ''}`}
+              className={`px-6 py-2.5 text-sm font-semibold border-b-2 transition-colors ${activeTab === 'ast' ? 'border-moon-purple text-white' : 'border-transparent text-moon-muted hover:text-white'}`}
               onClick={() => setActiveTab('ast')}
-              style={{ padding: '0.75rem 1.5rem', background: 'none', border: 'none', borderBottom: activeTab === 'ast' ? '2px solid #c084fc' : '2px solid transparent', color: activeTab === 'ast' ? '#e2e8f0' : '#64748b', cursor: 'pointer', outline: 'none' }}
             >
               AST Tree
             </button>
           </div>
-          <div className="console-output" ref={consoleRef} style={{ height: 'calc(100% - 46px)' }}>
+          
+          <div className="flex-1 overflow-y-auto p-4 font-mono text-sm leading-relaxed" ref={consoleRef}>
             {activeTab === 'output' ? (
-              <>
+              <div className="flex flex-col gap-1.5">
                 {logs.map((log, i) => (
-                  <div key={i} className={`log-line ${log.isError ? 'error' : ''}`} dangerouslySetInnerHTML={ansiToHtml(log.text)} />
+                  <div key={i} className={`break-words ${log.isError ? 'text-moon-error' : 'text-slate-300'}`} dangerouslySetInnerHTML={ansiToHtml(log.text)} />
                 ))}
                 {isWaitingInput && (
-                  <div className="runner-input-line" style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', color: '#fff' }}>
+                  <div className="flex gap-2 mt-2 text-white items-center">
                     <span>{currentPrompt}</span>
                     <input 
                       autoFocus
@@ -186,11 +196,11 @@ export default function Playground() {
                       value={inputValue}
                       onChange={e => setInputValue(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter') submitInput(); }}
-                      style={{ background: 'transparent', border: 'none', borderBottom: '1px solid #38bdf8', color: '#38bdf8', outline: 'none', flex: 1, fontFamily: 'monospace' }}
+                      className="bg-transparent border-b border-moon-accent text-moon-accent outline-none flex-1 font-mono focus:border-moon-accent-hover transition-colors"
                     />
                   </div>
                 )}
-              </>
+              </div>
             ) : (
               <ASTViewer logs={astLogs} />
             )}

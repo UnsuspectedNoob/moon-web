@@ -1,639 +1,76 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap');
-
-:root {
-  --bg-space: #020617;
-  --bg-pane: rgba(15, 23, 42, 0.6);
-  --border-color: rgba(255, 255, 255, 0.1);
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --accent-glow: 0 0 20px rgba(56, 189, 248, 0.4);
-  --accent: #38bdf8;
-  --error: #f43f5e;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--bg-space);
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.1), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.1), transparent 25%);
-  color: var(--text-main);
-  font-family: 'Inter', sans-serif;
-  height: 100vh;
-  overflow: hidden;
-}
-
-#app {
-  height: 100%;
-}
-
-.playground {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  background: var(--bg-pane);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  margin-bottom: 1rem;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-}
-
-.logo {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-}
-
-.run-btn {
-  background: rgba(56, 189, 248, 0.1);
-  color: var(--accent);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  padding: 0.6rem 1.5rem;
-  border-radius: 8px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: var(--accent-glow);
-}
-
-.run-btn:hover:not(:disabled) {
-  background: rgba(56, 189, 248, 0.2);
-  transform: translateY(-1px);
-  box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
-}
-
-.run-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-  background: transparent;
-  border-color: var(--border-color);
-  color: var(--text-muted);
-}
-
-.split-view {
-  display: flex;
-  gap: 1rem;
-  flex: 1;
-  min-height: 0; /* Important for flex child scrolling */
-}
-
-.editor-pane, .console-pane {
-  flex: 1;
-  background: var(--bg-pane);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-}
-
-.pane-header {
-  padding: 0.75rem 1.25rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--border-color);
-  background: rgba(0, 0, 0, 0.2);
-}
-
-#code-editor {
-  flex: 1;
-  width: 100%;
-  padding: 1.25rem;
-  box-sizing: border-box;
-  background: transparent;
-  border: none;
-  color: #e2e8f0;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  line-height: 1.6;
-  resize: none;
-  outline: none;
-}
-
-.console-output {
-  flex: 1;
-  padding: 1.25rem;
-  overflow-y: auto;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.log-line {
-  margin-bottom: 0.25rem;
-  color: #cbd5e1;
-  animation: fadeIn 0.3s ease;
-}
-
-.log-line.error {
-  color: var(--error);
-  font-weight: 600;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* React Router Layout Styles */
-.app-container {
-  display: flex;
-  height: 100vh;
-}
-
-.sidebar {
-  width: 250px;
-  background: var(--bg-pane);
-  border-right: 1px solid var(--border-color);
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  position: relative;
-  z-index: 5;
-  transition: width 0.3s ease, padding 0.3s ease;
-}
-
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-  padding: 0 0.5rem;
-}
-
-.sidebar-close-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.sidebar-close-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-.sidebar-closed .sidebar {
-  width: 0;
-  padding: 0;
-  overflow: hidden;
-  border-right: none;
-}
-
-.nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.nav-link {
-  color: var(--text-muted);
-  text-decoration: none;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  font-weight: 500;
-}
-
-.nav-link:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-main);
-}
-
-.nav-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.nav-sublinks {
-  display: flex;
-  flex-direction: column;
-  padding-left: 1.5rem;
-  margin-top: 0.25rem;
-  gap: 0.25rem;
-}
-
-.nav-sublink {
-  color: #94a3b8;
-  text-decoration: none;
-  padding: 0.4rem 0.5rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.nav-sublink:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-main);
-}
-
-.main-content {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  z-index: 10;
-}
-
-.sidebar-toggle {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 50;
-  background: var(--bg-pane);
-  border: 1px solid var(--border-color);
-  color: var(--text-main);
-  padding: 0.5rem;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  margin-top: 1rem;
-}
-
-
-
-.sidebar-toggle:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-
-
-/* Add padding to the toggle button space when closed */
-.sidebar-closed .playground-layout,
-.sidebar-closed .tutorial-container {
-  padding-left: max(4rem, 150px);
-}
-
-/* Tutorial Layout */
-.tutorial-container {
-  padding: 2rem max(4rem, 150px);
-  height: 100%;
-  overflow-y: auto;
-  box-sizing: border-box;
-}
-
-.tutorial-header {
-  margin-bottom: 3rem;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 1rem;
-}
-
-.tutorial-header h2 {
-  font-size: 2.5rem;
-  margin: 0 0 0.5rem 0;
-  color: var(--text-main);
-}
-
-.tutorial-header p {
-  color: var(--text-muted);
-  font-size: 1.1rem;
-  margin: 0;
-}
-
-.tutorial-chapter {
-  margin-bottom: 1.5rem;
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: visible;
-  transition: all 0.3s ease;
-}
-
-.tutorial-chapter[open] {
-  background: var(--bg-pane);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-.tutorial-chapter summary {
-  padding: 1.5rem;
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--accent);
-  cursor: pointer;
-  list-style: none; /* Hide default arrow */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  user-select: none;
-}
-
-.tutorial-chapter summary::-webkit-details-marker {
-  display: none;
-}
-
-.tutorial-chapter summary::after {
-  content: '+';
-  font-size: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.tutorial-chapter[open] summary::after {
-  transform: rotate(45deg);
-}
-
-.chapter-content {
-  padding: 0 1.5rem 1.5rem 1.5rem;
-  animation: slideDown 0.3s ease-out;
-}
-
-.chapter-content p {
-  color: #cbd5e1;
-  line-height: 1.6;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-}
-
-.chapter-content ul {
-  color: #cbd5e1;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* CodeRunner Widget */
-.code-runner {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
-  margin: 2rem 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.runner-editor {
-  display: flex;
-  flex-direction: column;
-}
-
-.runner-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.runner-header span {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-}
-
-.runner-header button {
-  background: rgba(56, 189, 248, 0.1);
-  color: var(--accent);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  padding: 0.3rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.85rem;
-  transition: all 0.2s ease;
-}
-
-.runner-header button:hover:not(:disabled) {
-  background: rgba(56, 189, 248, 0.2);
-}
-
-.code-editor {
-  width: 100%;
-  padding: 1.5rem;
-  background: transparent;
-  color: #e2e8f0;
-  border: none;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  line-height: 1.6;
-  resize: none;
-  outline: none;
-  box-sizing: border-box;
-  overflow: hidden; /* we auto-resize via rows */
-}
-
-/* For the main playground */
-.playground-layout {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  padding: 1.5rem;
-  box-sizing: border-box;
-  max-width: 1600px;
-  margin: 0 auto;
-}
-
-.playground-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding: 1rem 1.5rem;
-  background: var(--bg-pane);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-}
-
-.playground-header h2 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: var(--text-main);
-}
-
-.editor-scroll-container {
-  flex: 1;
-  overflow-y: auto;
-  background: transparent;
-}
-
-.split-view {
-  display: flex;
-  gap: 2rem;
-  flex: 1;
-  min-height: 0;
-}
-
-.runner-console {
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.6);
-  border-top: 1px solid var(--border-color);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-/* Tooltip Styles */
-.tooltip-wrapper {
-  position: relative;
-  display: inline-block;
-  cursor: help;
-  border-bottom: 1px dashed var(--accent);
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.tooltip-box {
-  visibility: hidden;
-  opacity: 0;
-  width: max-content;
-  max-width: 280px;
-  background-color: rgba(15, 23, 42, 0.95);
-  backdrop-filter: blur(10px);
-  color: var(--text-main);
-  text-align: left;
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  border-radius: 8px;
-  padding: 0.85rem;
-  position: absolute;
-  z-index: 100;
-  bottom: 140%;
-  left: 50%;
-  transform: translateX(-50%) translateY(10px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  font-size: 0.9rem;
-  font-weight: 400;
-  line-height: 1.5;
-  pointer-events: none;
-}
-
-.tooltip-box strong {
-  color: var(--accent);
-  text-transform: capitalize;
-}
-
-.tooltip-wrapper:hover .tooltip-box {
-  visibility: visible;
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-.tooltip-box::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -6px;
-  border-width: 6px;
-  border-style: solid;
-  border-color: rgba(56, 189, 248, 0.4) transparent transparent transparent;
-}
-
-/* --- Mobile Responsiveness --- */
-@media (max-width: 768px) {
-  /* Hide scrollbars completely on mobile for a native feel */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-moon-bg text-moon-text font-sans antialiased m-0;
+  }
+  
+  /* Custom scrollbar for webkit */
   ::-webkit-scrollbar {
-    display: none;
+    width: 10px;
+    height: 10px;
   }
   
-  /* Sidebar Overlay Behavior */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 1000;
-    box-shadow: 4px 0 24px rgba(0,0,0,0.8);
-    transform: translateX(0);
-    width: 280px;
-    padding: 1.5rem;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  ::-webkit-scrollbar-track {
+    background: transparent;
   }
   
-  .sidebar-closed .sidebar {
-    transform: translateX(-100%);
-    box-shadow: none;
-  }
-
-  /* The toggle button outside the sidebar */
-  .sidebar-toggle {
-    top: 1rem;
-    left: 1rem;
-    background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  /* Playground Stacked Layout */
-  .split-view {
-    flex-direction: column;
-    overflow-y: auto;
+  ::-webkit-scrollbar-thumb {
+    @apply bg-moon-border rounded-full border-[3px] border-solid border-moon-bg;
   }
   
-  .editor-pane {
-    flex: 1 1 50%;
-    min-height: 45vh;
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-moon-muted;
   }
 
-  .console-pane {
-    flex: 1 1 50%;
-    min-height: 45vh;
+  @media (max-width: 768px) {
+    ::-webkit-scrollbar {
+      display: none;
+    }
   }
+}
 
-  /* Tutorial Layout */
-  .tutorial-container {
-    padding: 1rem;
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-moon-accent to-moon-purple;
   }
   
-  .tutorial-header h1 {
-    font-size: 1.8rem;
+  .glass-panel {
+    @apply bg-moon-pane/40 backdrop-blur-md border border-white/5 rounded-2xl shadow-xl;
   }
+}
 
-  .tutorial-content {
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-  
-  pre {
-    overflow-x: auto;
-    border-radius: 8px;
-    padding: 1rem;
-  }
+/* Tutorial specific overrides that are easier to keep global for markdown content */
+.tutorial-content h1, .tutorial-content h2, .tutorial-content h3 {
+  @apply text-white font-bold mt-8 mb-4 tracking-tight;
+}
+
+.tutorial-content h1 {
+  @apply text-3xl md:text-4xl;
+}
+
+.tutorial-content h2 {
+  @apply text-2xl md:text-3xl border-b border-white/10 pb-2;
+}
+
+.tutorial-content h3 {
+  @apply text-xl md:text-2xl text-moon-accent;
+}
+
+.tutorial-content p {
+  @apply mb-4 leading-relaxed;
+}
+
+.tutorial-content code {
+  @apply font-mono text-sm bg-white/5 text-moon-accent px-1.5 py-0.5 rounded;
+}
+
+.tutorial-content pre {
+  @apply bg-[#0a0f1d] p-4 md:p-5 rounded-xl border border-white/5 overflow-x-auto my-6 shadow-lg;
+}
+
+.tutorial-content pre code {
+  @apply bg-transparent p-0 text-white font-normal;
 }

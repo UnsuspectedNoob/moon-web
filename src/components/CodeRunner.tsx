@@ -96,13 +96,24 @@ export default function CodeRunner({ initialCode }: CodeRunnerProps) {
   };
 
   return (
-    <div className="code-runner">
-      <div className="runner-editor">
-        <div className="runner-header">
-          <span>Moon Snippet</span>
-          <div className="runner-actions" style={{ display: 'flex', gap: '0.5rem' }}>
-            <button onClick={() => setCode(initialCode)} className="btn-reset" style={{ background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>Reset</button>
-            <button onClick={runCode} disabled={!engine || isWaitingInput}>Run</button>
+    <div className="bg-[#0a0f1d] border border-white/10 rounded-xl overflow-hidden shadow-2xl my-4">
+      <div className="flex flex-col border-b border-white/5">
+        <div className="flex justify-between items-center px-4 py-2 bg-[#020617] border-b border-white/5">
+          <span className="text-xs font-mono text-moon-muted tracking-widest uppercase">Moon Snippet</span>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => setCode(initialCode)} 
+              className="px-3 py-1 text-xs font-semibold text-moon-muted border border-white/10 rounded hover:bg-white/5 hover:text-white transition-colors"
+            >
+              Reset
+            </button>
+            <button 
+              onClick={runCode} 
+              disabled={!engine || isWaitingInput}
+              className="px-3 py-1 text-xs font-semibold bg-moon-accent text-[#020617] rounded hover:bg-moon-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Run
+            </button>
           </div>
         </div>
         <textarea
@@ -111,16 +122,16 @@ export default function CodeRunner({ initialCode }: CodeRunnerProps) {
           spellCheck="false"
           autoComplete="off"
           rows={code.split('\n').length || 1}
-          className="code-editor"
+          className="w-full bg-transparent p-4 font-mono text-sm text-slate-200 outline-none resize-none leading-relaxed"
         />
       </div>
       {(logs.length > 0 || isWaitingInput) && (
-        <div className="runner-console" ref={consoleRef}>
+        <div className="bg-[#020617] p-4 max-h-[300px] overflow-y-auto font-mono text-sm" ref={consoleRef}>
           {logs.map((log, i) => (
-            <div key={i} className={`log-line ${log.isError ? 'error' : ''}`} dangerouslySetInnerHTML={ansiToHtml(log.text)} />
+            <div key={i} className={`mb-1 break-words ${log.isError ? 'text-moon-error' : 'text-slate-300'}`} dangerouslySetInnerHTML={ansiToHtml(log.text)} />
           ))}
           {isWaitingInput && (
-            <div className="runner-input-line" style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', color: '#fff' }}>
+            <div className="flex gap-2 mt-2 items-center text-white">
               <span>{currentPrompt}</span>
               <input 
                 autoFocus
@@ -128,7 +139,7 @@ export default function CodeRunner({ initialCode }: CodeRunnerProps) {
                 value={inputValue}
                 onChange={e => setInputValue(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') submitInput(); }}
-                style={{ background: 'transparent', border: 'none', borderBottom: '1px solid #38bdf8', color: '#38bdf8', outline: 'none', flex: 1, fontFamily: 'monospace' }}
+                className="bg-transparent border-b border-moon-accent text-moon-accent flex-1 outline-none font-mono focus:border-moon-accent-hover transition-colors"
               />
             </div>
           )}
