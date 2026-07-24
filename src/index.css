@@ -52,13 +52,13 @@ header {
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #fff;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--text-main);
+  text-decoration: none;
 }
 
 .run-btn {
@@ -177,6 +177,32 @@ header {
   position: relative;
   z-index: 5;
   transition: width 0.3s ease, padding 0.3s ease;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding: 0 0.5rem;
+}
+
+.sidebar-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.sidebar-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
 .sidebar-closed .sidebar {
