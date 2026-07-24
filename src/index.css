@@ -233,19 +233,17 @@ header {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.sidebar-open .sidebar-toggle {
-  display: none; /* Hide toggle when sidebar is open */
-}
+
 
 /* Add padding to the toggle button space when closed */
 .sidebar-closed .playground-layout,
 .sidebar-closed .tutorial-container {
-  padding-left: 4rem;
+  padding-left: max(4rem, 150px);
 }
 
 /* Tutorial Layout */
 .tutorial-container {
-  padding: 2rem 4rem;
+  padding: 2rem max(4rem, 150px);
   height: 100%;
   overflow-y: auto;
   box-sizing: border-box;
