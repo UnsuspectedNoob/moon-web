@@ -42,12 +42,13 @@ export default function Tutorial() {
         <details className="tutorial-chapter" open>
           <summary>1. Variables and Primitives</summary>
           <div className="chapter-content">
-            <p>In Moon, variables are declared using the <code>let</code> and <code>be</code> keywords. Moon handles <Tooltip word="primitives">strings, numbers, booleans, and <code>nil</code></Tooltip>. You can also perform multiple <Tooltip word="assignment" text="assignments" /> at once.</p>
+            <p>Every story starts somewhere! In Moon, we start by creating variables using the <code>let</code> and <code>be</code> keywords. You can store basic data types (called <Tooltip word="primitives">primitives</Tooltip>) like numbers, text (strings), true/false values, and even <code>nil</code> (which means nothing). You can print anything to the screen using the <code>show</code> command. Notice how you can also group multiple <Tooltip word="assignment" text="assignments" /> on a single line!</p>
             <CodeRunner initialCode={`let age be 27
 let name be "Munachi"
 let is_active be true
 let nothing be nil
 
+# Multiple assignments at once!
 let a, b be [ ]
 
 show name + " is " + age
@@ -58,7 +59,7 @@ show a`} />
         <details className="tutorial-chapter">
           <summary>2. String Interpolation & Built-ins</summary>
           <div className="chapter-content">
-            <p>Strings are wrapped in double quotes. For string <Tooltip word="interpolation" />, wrap the expression in backticks <code>\` \`</code>. Moon also provides built-in <Tooltip word="phrasal" /> math and string functions.</p>
+            <p>Now that we have variables, let's mix them with text! Strings are wrapped in double quotes. To instantly insert a variable inside a string, we use <Tooltip word="interpolation" /> by wrapping the variable in backticks <code>\` \`</code>. Moon also comes with <Tooltip word="phrasal">phrasal built-in functions</Tooltip> that read like natural English, like <code>random from</code> or <code>floor of</code>.</p>
             <CodeRunner initialCode={`let number be 10
 show "The square of \`number\` is \`number * number\`!"
 
@@ -73,22 +74,22 @@ show "Random: \`random_num\`, Floored: \`floored\`, Upper: \`upper\`"`} />
         <details className="tutorial-chapter">
           <summary>3. Lists and Dictionaries</summary>
           <div className="chapter-content">
-            <p><Tooltip word="lists" text="Lists" /> and <Tooltip word="dictionaries" /> are powerful ways to store collections of data. You can access their items using brackets <code>[]</code> or the natural <code>'s</code> syntax.</p>
+            <p>Beyond single values, you'll often want to group data together. We use <Tooltip word="lists">lists</Tooltip> (square brackets) for ordered items, and <Tooltip word="dictionaries">dictionaries</Tooltip> (curly braces) for labeled items. You can access what's inside them using standard brackets <code>[]</code>, or by using Moon's natural <code>'s</code> syntax which reads just like English!</p>
             <CodeRunner initialCode={`let inventory be [ "sword", "shield" ]
-show inventory[1]
+show "Second item is: " + inventory[1]
 
 let user be {
   name: "Emrys",
   speed: "Fast"
 }
-show user's name`} />
+show "The user's name is: " + user's name`} />
           </div>
         </details>
 
         <details className="tutorial-chapter">
           <summary>4. Ranges</summary>
           <div className="chapter-content">
-            <p>Ranges allow you to generate a sequence of numbers effortlessly using the <code>to</code> and <code>by</code> keywords. They can even be embedded directly inside <Tooltip word="lists" />!</p>
+            <p>What if you need a long sequence of numbers, like 1 to 100? Instead of typing them out in a list, Moon gives you Ranges. Using the <code>to</code> and <code>by</code> keywords, you can effortlessly generate sequences. You can even embed these ranges directly inside your <Tooltip word="lists" />!</p>
             <CodeRunner initialCode={`let my_range be 1 to 10 by 2
 show my_range
 
@@ -100,11 +101,11 @@ show combined`} />
         <details className="tutorial-chapter">
           <summary>5. Data Actions (State Mutation)</summary>
           <div className="chapter-content">
-            <p>Moon avoids arbitrary symbols for actions and relies on English verbs instead.</p>
+            <p>We've created variables and collections, but how do we change them? Most programming languages use confusing math symbols (like <code>+=</code>), but Moon prefers clear English verbs.</p>
             <ul>
-              <li><code>set</code> performs <Tooltip word="assignment" />.</li>
-              <li><code>update</code> performs in-place arithmetic (like +=).</li>
-              <li><code>add</code> <Tooltip word="appends" /> items to lists. You can add multiple items at once!</li>
+              <li>Use <code>set</code> when you want to change a variable's value (<Tooltip word="assignment" />).</li>
+              <li>Use <code>update</code> when you want to perform math on a variable.</li>
+              <li>Use <code>add</code> when you want to <Tooltip word="appends" text="append" /> items to the end of a list.</li>
             </ul>
             <CodeRunner initialCode={`let hp be 100
 update hp - 20
@@ -122,7 +123,7 @@ show inventory`} />
         <details className="tutorial-chapter">
           <summary>6. Control Flow</summary>
           <div className="chapter-content">
-            <p>Blocks are opened with a colon <code>:</code> and must be closed with the <code>end</code> keyword. Moon supports standard <code>if</code>, <code>else if</code>, and <code>unless</code> blocks.</p>
+            <p>Sometimes you only want code to run if a certain condition is met. This is where <code>if</code>, <code>else if</code>, and <code>else</code> come in. When you start a block of code, you open it with a colon <code>:</code> and you must always close it with the <code>end</code> keyword. You can also use the handy <code>unless</code> keyword at the end of a line!</p>
             <CodeRunner initialCode={`let power be 50
 
 if power > 70:
@@ -133,7 +134,6 @@ else:
   show "You are weak."
 end
 
-# Ruby-esque trailing modifiers
 show "Danger!" unless power > 20`} />
           </div>
         </details>
@@ -141,7 +141,7 @@ show "Danger!" unless power > 20`} />
         <details className="tutorial-chapter">
           <summary>7. Chained Comparisons</summary>
           <div className="chapter-content">
-            <p>Moon allows you to perform <Tooltip word="chained comparisons" /> naturally, without having to split them up with 'and'.</p>
+            <p>Now let's supercharge our control flow! In standard programming, checking if a number is between two values forces you to write the variable twice (like <code>if power &gt; 10 and power &lt;= 100</code>). Moon allows you to write <Tooltip word="chained comparisons" /> naturally, exactly how you would write it in math.</p>
             <CodeRunner initialCode={`let power be 50
 
 if 10 < power <= 100:
@@ -153,9 +153,10 @@ end`} />
         <details className="tutorial-chapter">
           <summary>8. Sticky Subjects</summary>
           <div className="chapter-content">
-            <p>When chaining conditions, Moon supports <Tooltip word="sticky subjects" />. The language remembers the variable you were testing so you don't have to repeat it!</p>
+            <p>Moon has another trick for logical operations called <Tooltip word="sticky subjects" />. When you use <code>and</code> or <code>or</code>, Moon remembers the variable you were just talking about! This means you don't have to repeat the variable name, saving you time and making the code read beautifully.</p>
             <CodeRunner initialCode={`let n be 5
 
+# Notice we don't have to say 'and n is not 10'!
 if n > 0 and is not 10:
   show "n is greater than 0, and n is not 10!"
 end`} />
@@ -165,23 +166,23 @@ end`} />
         <details className="tutorial-chapter">
           <summary>9. Inline Conditions</summary>
           <div className="chapter-content">
-            <p>Instead of writing a full <code>if/else</code> block just to pick between two values, you can use inline conditions. It reads perfectly as English: "Assign X if condition, else Y".</p>
+            <p>Writing a full <code>if/else</code> block just to assign a single variable can feel bulky. Moon provides a quick, one-line shortcut. It reads perfectly as an English sentence: "Let this variable be X if the condition is true, else let it be Y".</p>
             <CodeRunner initialCode={`let score be 85
 let grade be "Pass" if score >= 50 else "Fail"
 
-show grade`} />
+show "Your grade is: \`grade\`"`} />
           </div>
         </details>
 
         <details className="tutorial-chapter">
           <summary>10. Loops, Unpacking, and Comprehensions</summary>
           <div className="chapter-content">
-            <p>Moon provides a rich set of looping constructs. You can unpack <Tooltip word="lists" /> or <Tooltip word="dictionaries" /> seamlessly. <Tooltip word="Comprehensions" /> can be written in a single line, or as multi-line blocks!</p>
-            <CodeRunner initialCode={`# Functional comprehensions using ranges and sticky subjects
+            <p>When you have a collection, you usually want to loop over its items. Moon provides <code>for each</code> loops and <code>until</code> loops. But for the ultimate shortcut, you can use <Tooltip word="Comprehensions" text="comprehensions" />! These allow you to rapidly build a brand new list or dictionary by filtering an existing one in just a few lines of code.</p>
+            <CodeRunner initialCode={`# Building a list of even numbers from a range
 let evens be [for each x in 1 to 10 keep x if is not 5]
-show evens
+show "Evens without 5: " + evens
 
-# Dictionary block comprehensions with unpacking!
+# Building a dictionary from a list, using unpacking!
 let data be ["alpha", "beta"]
 let dict be {
   for each file, index in data:
@@ -192,7 +193,7 @@ show dict
 
 let p be 1
 until p > 3:
-  show p
+  show "Loop tick: \`p\`"
   update p + 1
 end`} />
           </div>
@@ -201,7 +202,7 @@ end`} />
         <details className="tutorial-chapter">
           <summary>11. Blueprints, Instantiation & Cloning</summary>
           <div className="chapter-content">
-            <p>Moon uses <code>type</code> to define data blueprints. You can instantiate them using <code>with ... end</code> or the <code>{}</code> shorthand. You can even embed "active properties" (methods) right inside the type!</p>
+            <p>Now we enter advanced territory! If lists and dictionaries aren't enough, you can create your own custom data blueprints using the <code>type</code> keyword. Once defined, you can bring them to life (instantiate them) using <code>with ... end</code>. You can even embed special commands right inside the blueprint, like "active properties" which run code when you ask for them!</p>
             <CodeRunner initialCode={`type Player:
   name, health: 100,
   my info:
@@ -222,14 +223,16 @@ show p1's info`} />
         <details className="tutorial-chapter">
           <summary>12. Phrasal Functions & Multiple Dispatch</summary>
           <div className="chapter-content">
-            <p>Functions in Moon are written as natural language phrases. Even better, you can use <Tooltip word="Multiple Dispatch" text="multiple dispatch" /> to overload the exact same phrase to do different things depending on the parameter types!</p>
+            <p>Functions in Moon are written as natural language <Tooltip word="phrasal">phrases</Tooltip>, making them incredibly easy to read. Even better, you can use <Tooltip word="Multiple Dispatch" text="multiple dispatch" /> to write the exact same phrase multiple times, but have it do completely different things depending on the <code>type</code> of data you feed it!</p>
             <CodeRunner initialCode={`type Node: ip end
 type Firewall: strength end
 
+# The phrase "breach system" handles Nodes
 let breach system (target: Node):
   show "Hacking node at \`target's ip\`!"
 end
 
+# The exact same phrase handles Firewalls differently!
 let breach system (target: Firewall):
   show "Bypassing firewall with strength \`target's strength\`!"
 end
@@ -245,20 +248,20 @@ breach system fw`} />
         <details className="tutorial-chapter">
           <summary>13. Advanced Slicing & Access</summary>
           <div className="chapter-content">
-            <p>Moon provides incredibly clean syntax for manipulating <Tooltip word="lists" />. You can use <code>end</code> in slices, and even use dot-notation for quick bracketless access!</p>
+            <p>To wrap things up, here are some pro-tips for working with <Tooltip word="lists" />. Moon provides incredibly clean syntax for manipulating lists. You can use the <code>end</code> keyword in slices to grab everything up to the end, or even slice backwards! You can also use a quick dot-notation for grabbing items by their 1-based index without using brackets.</p>
             <CodeRunner initialCode={`let items be [ 10, 20, 30, 40, 50 ]
 
 # Quick 1-indexed bracketless access
 let first be items.1
-show first
+show "First item is: \`first\`"
 
 # Slicing with the 'end' keyword
 let rest be items[2 to end]
-show rest
+show "Rest of items: \`rest\`"
 
 # Slicing backwards
 let backwards be items[end to 1]
-show backwards`} />
+show "Backwards: \`backwards\`"`} />
           </div>
         </details>
 
