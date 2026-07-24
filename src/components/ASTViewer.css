@@ -1,0 +1,124 @@
+.ast-viewer {
+  padding: 1rem;
+  font-family: 'Fira Code', 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+}
+
+.ast-empty {
+  color: #64748b;
+  font-style: italic;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.ast-tree-node-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.ast-tree-node {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  margin: 1px 0;
+  border-radius: 6px;
+  cursor: default;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.ast-tree-node.has-children {
+  cursor: pointer;
+}
+
+.ast-tree-node.has-children:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.ast-tree-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.ast-tree-icon {
+  margin-right: 8px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.2));
+}
+
+.ast-tree-content {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ast-tree-children {
+  /* This creates the beautiful connecting left-border line for children */
+  border-left: 1px solid rgba(148, 163, 184, 0.2);
+  margin-left: 21px; /* Align with the toggle arrow */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Syntax Highlighting */
+.ast-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.ast-pill.block-pill {
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.1);
+}
+
+.ast-pill.type-pill {
+  background: rgba(192, 132, 252, 0.1);
+  border: 1px solid rgba(192, 132, 252, 0.2);
+  color: #c084fc;
+  box-shadow: 0 0 10px rgba(192, 132, 252, 0.1);
+}
+
+.ast-type {
+  /* Inherits color from pill */
+}
+
+.ast-value {
+  margin-left: 6px;
+  padding-left: 6px;
+  border-left: 1px solid currentColor;
+  opacity: 0.9;
+}
+
+.ast-variable {
+  color: #f472b6;
+  font-weight: 500;
+  background: rgba(244, 114, 182, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.ast-remainder {
+  color: #cbd5e1;
+  margin-left: 8px;
+}
+
+.ast-text {
+  color: #94a3b8;
+}
