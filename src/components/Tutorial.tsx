@@ -1,7 +1,7 @@
 import CodeRunner from './CodeRunner';
-import { useState } from 'react';
+import type { ReactNode } from 'react';
 
-const Tooltip = ({ word, text }: { word: string; text?: string }) => {
+const Tooltip = ({ word, text, children }: { word: string; text?: string; children?: ReactNode }) => {
   const definitions: Record<string, string> = {
     "primitives": "The most basic types of data a computer understands, like numbers, text (strings), and true/false (booleans).",
     "assignment": "Giving a variable a specific value to hold on to.",
@@ -17,7 +17,7 @@ const Tooltip = ({ word, text }: { word: string; text?: string }) => {
   };
 
   const definition = definitions[word.toLowerCase()] || "Definition not found.";
-  const displayText = text || word;
+  const displayText = children || text || word;
 
   return (
     <span className="tooltip-wrapper">
