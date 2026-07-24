@@ -1,32 +1,56 @@
-# React + TypeScript + Vite
+# Moon Web Playground
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Welcome to the **Moon Web Playground**! This project provides an interactive, browser-based environment for experimenting with the **Moon** programming language.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Interactive Playground**: Write Moon code directly in your browser.
+- **WebAssembly Engine**: Under the hood, Moon is compiled to WebAssembly, providing blazing-fast execution speeds entirely on the client-side.
+- **Comprehensive Tutorial**: Learn Moon's unique, natural language-inspired syntax through a detailed, interactive tutorial right in the playground.
+- **Real-time Console**: See print outputs, execution results, and errors immediately as you code.
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
+Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
 
-## Expanding the Oxlint configuration
+### Installation
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/UnsuspectedNoob/moon-web.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd moon-web
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+### Running the Development Server
+
+Start the local Vite development server:
+```bash
+npm run dev
 ```
+Then, open the provided `localhost` URL in your browser to access the playground.
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## About Moon
+Moon is a programming language designed to read like natural English, making it incredibly expressive and intuitive. It supports advanced features such as:
+- Phrasal Functions and Multiple Dispatch
+- Sticky and Chained Comparisons
+- In-place State Mutations (`set`, `update`, `add`)
+- Blueprint Instantiation and Embedded Methods
+
+Check out the built-in tutorial in the web playground to see these features in action!
+
+## Technologies Used
+- [React](https://reactjs.org/)
+- [Vite](https://vitejs.dev/)
+- [WebAssembly](https://webassembly.org/)
+- HTML/CSS (Glassmorphism UI)
+
+## License
+This project is open-source and available under the MIT License.
