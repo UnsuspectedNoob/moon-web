@@ -1,13 +1,58 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Code, Zap, BookOpen, Play } from 'lucide-react';
+import { Code, Zap, BookOpen, Play, Loader2 } from 'lucide-react';
+// @ts-ignore
+import MoonModule from '../moon.js';
 import './Home.css';
 
 export default function Home() {
   const [showOutput, setShowOutput] = useState(false);
+  const [engine, setEngine] = useState<any>(null);
+  const [logs, setLogs] = useState<string[]>([]);
+  const [isRunning, setIsRunning] = useState(false);
 
-  const runShowcase = () => {
+  const showcaseCode = `let max of (a: Number) and (b: Number):
+  give a if a > b else b
+end
+
+let x, y be 40, 30
+show "Max of \`x\` and \`y\` is \`max of x and y\`"`;
+
+  useEffect(() => {
+    let instance: any = null;
+    MoonModule({
+      print: (text: string) => {
+        setLogs(prev => [...prev, text]);
+      },
+      printErr: (text: string) => {
+        setLogs(prev => [...prev, "Error: " + text]);
+      }
+    }).then((mod: any) => {
+      instance = mod;
+      if (instance._initMoonWeb) {
+        instance._initMoonWeb();
+      }
+      setEngine(instance);
+    });
+  }, []);
+
+  const runShowcase = async () => {
+    if (!engine || isRunning) return;
     setShowOutput(true);
+    setLogs([]);
+    setIsRunning(true);
+    
+    try {
+      if (engine._setCompilerFlags) {
+        engine._setCompilerFlags(false, false, false, false);
+      }
+      const executeMoonCode = engine.cwrap('executeMoonCode', 'void', ['string'], { async: true });
+      await executeMoonCode(showcaseCode);
+    } catch (e: any) {
+      setLogs(prev => [...prev, "Fatal Error: " + e.message]);
+    } finally {
+      setIsRunning(false);
+    }
   };
 
   return (
@@ -69,40 +114,25 @@ export default function Home() {
             <div className="window-controls">
               <span></span><span></span><span></span>
             </div>
-            <div className="window-title">phrasal-dispatch.moon</div>
-            <button className="showcase-run-btn" onClick={runShowcase}>
-              <Play size={14} /> Run
+            <div className="window-title">max.moon</div>
+            <button className="showcase-run-btn" onClick={runShowcase} disabled={!engine || isRunning}>
+              {isRunning ? <Loader2 className="spinner" size={14} /> : <Play size={14} />} Run
             </button>
           </div>
           <pre className="showcase-code">
             <code>
-{`type Node: ip end
-type Firewall: strength end
-
-let breach system (target: Node):
-  show "Hacking node at \`target's ip\`!"
-end
-
-let breach system (target: Firewall):
-  show "Bypassing firewall with strength \`target's strength\`!"
-end
-
-let server be Node: "192.168.1.1"
-breach system server
-
-let wall be Firewall: 100
-breach system wall`}
+              {showcaseCode}
             </code>
           </pre>
-          
+
           <div className={`showcase-output-box ${showOutput ? 'visible' : ''}`}>
             <div className="output-header">Console Output</div>
             <div className="output-content">
-              {showOutput && (
-                <>
-                  <div className="output-line" style={{ animationDelay: '0.1s' }}>Hacking node at 192.168.1.1!</div>
-                  <div className="output-line" style={{ animationDelay: '0.4s' }}>Bypassing firewall with strength 100!</div>
-                </>
+              {logs.map((log, i) => (
+                <div key={i} className="output-line" dangerouslySetInnerHTML={{__html: log}} />
+              ))}
+              {!isRunning && logs.length === 0 && showOutput && (
+                <div className="output-line" style={{ color: '#94a3b8' }}>No output produced.</div>
               )}
             </div>
           </div>
