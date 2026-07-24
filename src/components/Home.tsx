@@ -1,8 +1,15 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Code, Zap, BookOpen } from 'lucide-react';
+import { Code, Zap, BookOpen, Play } from 'lucide-react';
 import './Home.css';
 
 export default function Home() {
+  const [showOutput, setShowOutput] = useState(false);
+
+  const runShowcase = () => {
+    setShowOutput(true);
+  };
+
   return (
     <div className="home-container">
       <div className="ambient-background">
@@ -10,7 +17,7 @@ export default function Home() {
         <div className="ambient-orb orb-2"></div>
         <div className="ambient-orb orb-3"></div>
       </div>
-      
+
       <main className="home-content">
         <header className="hero-section">
           <div className="hero-badge">v1.0 is here</div>
@@ -18,7 +25,7 @@ export default function Home() {
             Code that reads like a <span className="text-gradient">story.</span>
           </h1>
           <p className="hero-subtitle">
-            Moon is a revolutionary programming language that bridges the gap between natural human thought and raw computational power. 
+            Moon is a revolutionary programming language that attempts to bridge the gap between natural human thought and raw computational power.
             Write logical, beautiful phrasal expressions backed by extreme performance.
           </p>
           <div className="hero-actions">
@@ -39,7 +46,7 @@ export default function Home() {
             <h3>Natural Language Syntax</h3>
             <p>Write fluid, readable code with phrasal functions, sticky subjects, and chained comparisons that read exactly like English sentences.</p>
           </div>
-          
+
           <div className="feature-card glass-panel">
             <div className="feature-icon-wrapper">
               <Code className="feature-icon" size={24} />
@@ -47,7 +54,7 @@ export default function Home() {
             <h3>Dynamic Blueprints</h3>
             <p>Create robust custom data types with built-in active properties, and leverage multiple dispatch to seamlessly handle different structures.</p>
           </div>
-          
+
           <div className="feature-card glass-panel">
             <div className="feature-icon-wrapper">
               <Zap className="feature-icon" size={24} />
@@ -63,6 +70,9 @@ export default function Home() {
               <span></span><span></span><span></span>
             </div>
             <div className="window-title">phrasal-dispatch.moon</div>
+            <button className="showcase-run-btn" onClick={runShowcase}>
+              <Play size={14} /> Run
+            </button>
           </div>
           <pre className="showcase-code">
             <code>
@@ -75,9 +85,27 @@ end
 
 let breach system (target: Firewall):
   show "Bypassing firewall with strength \`target's strength\`!"
-end`}
+end
+
+let server be Node: "192.168.1.1"
+breach system server
+
+let wall be Firewall: 100
+breach system wall`}
             </code>
           </pre>
+          
+          <div className={`showcase-output-box ${showOutput ? 'visible' : ''}`}>
+            <div className="output-header">Console Output</div>
+            <div className="output-content">
+              {showOutput && (
+                <>
+                  <div className="output-line" style={{ animationDelay: '0.1s' }}>Hacking node at 192.168.1.1!</div>
+                  <div className="output-line" style={{ animationDelay: '0.4s' }}>Bypassing firewall with strength 100!</div>
+                </>
+              )}
+            </div>
+          </div>
         </section>
       </main>
     </div>
