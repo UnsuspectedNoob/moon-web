@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { useState } from 'react'
 import Playground from './components/Playground'
-import Tutorial from './components/Tutorial'
+import Tutorial, { chapters } from './components/Tutorial'
 import { Menu } from 'lucide-react'
 import './index.css'
 
@@ -17,7 +17,16 @@ function App() {
           </div>
           <div className="nav-links">
             <Link to="/" className="nav-link">Playground</Link>
-            <Link to="/tutorial" className="nav-link">Tutorial</Link>
+            <div className="nav-group">
+              <Link to="/tutorial" className="nav-link">Tutorial</Link>
+              <div className="nav-sublinks">
+                {chapters.map((chapter, i) => (
+                  <Link key={i} to={`/tutorial#chapter-${i}`} className="nav-sublink">
+                    {i + 1}. {chapter.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </nav>
         <main className="main-content">
