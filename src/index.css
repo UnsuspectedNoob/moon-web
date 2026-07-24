@@ -227,19 +227,67 @@ header {
 }
 
 .tutorial-chapter {
-  margin-bottom: 4rem;
+  margin-bottom: 1.5rem;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.tutorial-chapter h3 {
-  font-size: 1.5rem;
+.tutorial-chapter[open] {
+  background: var(--bg-pane);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.tutorial-chapter summary {
+  padding: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 600;
   color: var(--accent);
-  margin-bottom: 1rem;
+  cursor: pointer;
+  list-style: none; /* Hide default arrow */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
 }
 
-.tutorial-chapter p {
+.tutorial-chapter summary::-webkit-details-marker {
+  display: none;
+}
+
+.tutorial-chapter summary::after {
+  content: '+';
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.tutorial-chapter[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.chapter-content {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+.chapter-content p {
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.chapter-content ul {
   color: #cbd5e1;
   line-height: 1.6;
   margin-bottom: 1.5rem;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* CodeRunner Widget */
