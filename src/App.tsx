@@ -3,11 +3,12 @@ import { useState } from 'react'
 import Home from './components/Home'
 import Playground from './components/Playground'
 import Tutorial, { chapters } from './components/Tutorial'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 import './index.css'
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [tutorialDropdownOpen, setTutorialDropdownOpen] = useState(false)
 
   return (
     <BrowserRouter>
@@ -50,19 +51,20 @@ function App() {
             </Link>
             
             <div className="flex flex-col gap-2">
-              <Link 
-                to="/tutorial" 
-                className="block px-4 py-2 rounded-lg text-sm font-semibold text-moon-muted hover:text-white hover:bg-white/5 transition-colors"
-                onClick={() => setSidebarOpen(false)}
+              <button 
+                onClick={() => setTutorialDropdownOpen(!tutorialDropdownOpen)}
+                className="w-full flex items-center justify-between px-4 py-2 rounded-lg text-sm font-semibold text-moon-muted hover:text-white hover:bg-white/5 transition-colors"
               >
-                Tutorial
-              </Link>
-              <div className="flex flex-col gap-1 pl-4 border-l-2 border-white/5 ml-6">
+                <span>Tutorial</span>
+                <ChevronDown size={16} className={`transform transition-transform ${tutorialDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              <div className={`flex flex-col gap-1 pl-4 border-l-2 border-white/5 ml-6 overflow-hidden transition-all duration-300 ${tutorialDropdownOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                 {chapters.map((chapter, i) => (
                   <Link 
                     key={i} 
-                    to={`/tutorial#chapter-${i}`} 
-                    className="block px-4 py-1.5 text-xs text-moon-muted hover:text-moon-accent transition-colors"
+                    to={`/tutorial#chapter-${i + 1}`} 
+                    className="block px-4 py-1.5 text-xs text-moon-muted hover:text-moon-accent transition-colors truncate"
                     onClick={() => setSidebarOpen(false)}
                   >
                     {i + 1}. {chapter.title}

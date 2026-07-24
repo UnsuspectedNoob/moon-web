@@ -18,16 +18,18 @@ const Tooltip = ({ word, text, children }: { word: string; text?: string; childr
     "multiple dispatch": "Writing multiple versions of the same function, and letting Moon automatically pick the right one based on the type of data you give it.",
     "instantiate": "To bring a blueprint to life by creating an actual working copy of it in memory.",
     "index": "The numbered position of an item in a list (starting from 1 in Moon).",
-    "blueprint": "A custom template (or 'type') that defines how a piece of data should look and behave."
+    "1-based": "In Moon, counting starts at 1 (just like in natural human language), rather than 0 which is typically used for machines.",
+    "blueprint": "A custom template (or 'type') that defines how a piece of data should look and behave.",
+    "comments": "Lines starting with # are completely ignored by the computer. They are meant for human developers to read."
   };
 
   const definition = definitions[word.toLowerCase()] || "Definition not found.";
   const displayText = children || text || word;
 
   return (
-    <span className="relative group inline-block cursor-help border-b border-dashed border-moon-accent text-moon-accent hover:bg-moon-accent/10 transition-colors rounded px-1">
+    <span className="relative group/tooltip inline-block cursor-help border-b border-dashed border-moon-accent text-moon-accent hover:bg-moon-accent/10 transition-colors rounded px-1">
       {displayText}
-      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-moon-pane border border-moon-border text-white text-sm rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 pointer-events-none before:content-[''] before:absolute before:top-full before:left-1/2 before:-translate-x-1/2 before:border-4 before:border-transparent before:border-t-moon-border">
+      <span className="max-md:fixed max-md:bottom-4 max-md:left-4 max-md:right-4 max-md:w-auto max-md:translate-x-0 max-md:mb-0 max-md:before:hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-moon-pane border border-moon-border text-white text-sm rounded-lg shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-50 pointer-events-none before:content-[''] before:absolute before:top-full before:left-1/2 before:-translate-x-1/2 before:border-4 before:border-transparent before:border-t-moon-border">
         <strong className="text-moon-accent">{word}</strong>: {definition}
       </span>
     </span>
@@ -38,7 +40,7 @@ export const chapters = [
   {
     title: "Variables and Primitives",
     content: (
-      <p>Every story starts somewhere! In Moon, we start by creating variables using the <code>let</code> and <code>be</code> keywords. You can store basic data types (called <Tooltip word="primitives">primitives</Tooltip>) like numbers, text (strings), true/false values, and even <code>nil</code> (which means nothing). You can print anything to the screen using the <code>show</code> command. Notice how you can also group multiple <Tooltip word="assignment" text="assignments" /> on a single line!</p>
+      <p>Every story starts somewhere! In Moon, we start by creating variables using the <code>let</code> and <code>be</code> keywords. You can store basic data types (called <Tooltip word="primitives">primitives</Tooltip>) like numbers, text (strings), true/false values, and even <code>nil</code> (which means nothing). You can print anything to the screen using the <code>show</code> command. Notice how you can also group multiple <Tooltip word="assignment" text="assignments" /> on a single line! Finally, any lines starting with a <Tooltip word="comments">#</Tooltip> are comments, which the computer completely ignores.</p>
     ),
     code: `let age be 27
 let name be "Munachi"
@@ -83,13 +85,13 @@ show "Hello \`upper\`, your lucky number is \`choice\`!"`
       <p>Beyond single values, you'll often want to group data together. We use <Tooltip word="lists">lists</Tooltip> (square brackets) for ordered items, and <Tooltip word="dictionaries">dictionaries</Tooltip> (curly braces) for labeled items. You can access what's inside them using standard brackets <code>[]</code>, or by using Moon's natural <code>'s</code> syntax which reads just like English!</p>
     ),
     code: `let inventory be [ "sword", "shield" ]
-show "Second item is: " + inventory[1]
+show "Second item is: " + inventory[2] # or inventory.2
 
 let user be {
   name: "Emrys",
   speed: "Fast"
 }
-show "The user's name is: " + user's name`
+show "The user's name is: \`user's name\`"`
   },
   {
     title: "Ranges",
@@ -106,7 +108,7 @@ show combined`
     title: "Data Actions (State Mutation)",
     content: (
       <>
-        <p>We've created variables and collections, but how do we change them? Most programming languages use confusing math symbols (like <code>+=</code>), but Moon prefers clear English verbs.</p>
+        <p>We've created variables and collections, but how do we change them? Most programming languages might use math symbols (like <code>=</code>), but Moon prefers clear English verbs.</p>
         <ul className="list-disc pl-6 my-4 space-y-2 text-slate-300">
           <li>Use <code>set</code> when you want to change a variable's value (<Tooltip word="assignment" />).</li>
           <li>Use <code>update</code> when you want to perform math on a variable.</li>
@@ -132,12 +134,14 @@ show inventory`
     content: (
       <>
         <p>Sometimes you only want code to run if a certain condition is met. This is where <code>if</code>, <code>else if</code>, and <code>else</code> come in. If you have multiple things to do, you can open a block using a colon <code>:</code> and close it with the <code>end</code> keyword.</p>
-        <p>But here's a secret: if you only have a single statement to execute, you can skip the block entirely! Moon also provides the intuitive opposite of <code>if</code>: <code>unless</code>. These can even be placed at the end of a line!</p>
+        <p>But here's a secret: if you only have a single statement to execute, you can skip the block entirely! </p>
+        <p>Moon also provides the intuitive opposite of <code>if</code>: <code>unless</code>. These can even be placed at the end of a line!</p>
       </>
     ),
-    code: `# A multi-line block requires a colon and an 'end'
+    code: `
 let power be 50
 
+# A multi-line block requires a colon and an 'end'
 if power > 70:
   show "You are very strong."
   show "You are ready for battle."
@@ -289,7 +293,7 @@ breach system fw`
   {
     title: "Advanced Slicing & Access",
     content: (
-      <p>To wrap things up, here are some pro-tips for working with <Tooltip word="lists" />. Moon provides incredibly clean syntax for manipulating lists. You can use the <code>end</code> keyword in slices to grab everything up to the end, or even slice backwards! You can also use a quick dot-notation for grabbing items by their 1-based <Tooltip word="index">index</Tooltip> without using brackets.</p>
+      <p>To wrap things up, here are some pro-tips for working with <Tooltip word="lists" />. Moon provides incredibly clean syntax for manipulating lists. You can use the <code>end</code> keyword in slices to grab everything up to the end, or even slice backwards! You can also use a quick dot-notation for grabbing items by their <Tooltip word="1-based" text="1-based" /> <Tooltip word="index">index</Tooltip> without using brackets.</p>
     ),
     code: `let items be [ 10, 20, 30, 40, 50 ]
 
@@ -333,7 +337,7 @@ export default function Tutorial() {
 
       <div className="tutorial-content flex flex-col gap-6">
         {chapters.map((chapter, i) => (
-          <details key={i} className="group bg-moon-pane border border-moon-border rounded-2xl overflow-hidden shadow-lg transition-all" id={`chapter-${i}`} open={i === 0}>
+          <details key={i} className="group bg-moon-pane border border-moon-border rounded-2xl overflow-hidden shadow-lg transition-all" id={`chapter-${i + 1}`} open={i === 0}>
             <summary className="p-5 md:p-6 text-xl md:text-2xl font-bold text-white cursor-pointer select-none list-none flex justify-between items-center hover:bg-white/5 transition-colors">
               <span><span className="text-moon-accent mr-3">{i + 1}.</span> {chapter.title}</span>
               <span className="transform group-open:rotate-180 transition-transform text-moon-muted">▼</span>

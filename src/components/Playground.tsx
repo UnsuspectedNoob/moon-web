@@ -128,14 +128,23 @@ export default function Playground() {
       <header className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 border-b border-white/5 gap-4">
         <h2 className="text-xl font-bold tracking-tight">Interactive Playground</h2>
         <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
-          <label className="flex items-center gap-2 text-sm text-moon-muted cursor-pointer hover:text-white transition-colors">
-            <input 
-              type="checkbox" 
-              checked={showAST} 
-              onChange={e => setShowAST(e.target.checked)}
-              className="accent-moon-accent w-4 h-4"
-            />
-            Parse AST
+          <label className="flex items-center gap-3 cursor-pointer group">
+            <span className="text-sm font-medium text-moon-muted group-hover:text-white transition-colors">Parse AST</span>
+            <div className="relative">
+              <input 
+                type="checkbox" 
+                className="sr-only peer"
+                checked={showAST} 
+                onChange={e => {
+                  const checked = e.target.checked;
+                  setShowAST(checked);
+                  if (!checked && activeTab === 'ast') {
+                    setActiveTab('output');
+                  }
+                }}
+              />
+              <div className="w-11 h-6 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-moon-accent transition-colors"></div>
+            </div>
           </label>
           <button 
             className="flex items-center gap-2 px-4 py-2 bg-moon-accent text-[#020617] font-bold rounded-lg hover:bg-moon-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
@@ -173,12 +182,14 @@ export default function Playground() {
             >
               Output
             </button>
-            <button 
-              className={`px-6 py-2.5 text-sm font-semibold border-b-2 transition-colors ${activeTab === 'ast' ? 'border-moon-purple text-white' : 'border-transparent text-moon-muted hover:text-white'}`}
-              onClick={() => setActiveTab('ast')}
-            >
-              AST Tree
-            </button>
+            {showAST && (
+              <button 
+                className={`px-6 py-2.5 text-sm font-semibold border-b-2 transition-colors ${activeTab === 'ast' ? 'border-moon-purple text-white' : 'border-transparent text-moon-muted hover:text-white'}`}
+                onClick={() => setActiveTab('ast')}
+              >
+                AST Tree
+              </button>
+            )}
           </div>
           
           <div className="flex-1 overflow-y-auto p-4 font-mono text-sm leading-relaxed" ref={consoleRef}>
