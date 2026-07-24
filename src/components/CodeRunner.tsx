@@ -61,7 +61,7 @@ export default function CodeRunner({ initialCode }: CodeRunnerProps) {
     }
     
     try {
-      const executeMoonCode = engine.cwrap('executeMoonCode', 'void', ['string']);
+      const executeMoonCode = engine.cwrap('executeMoonCode', 'void', ['string'], { async: true });
       executeMoonCode(code);
     } catch (e: any) {
       setLogs(prev => [...prev, { text: "Fatal Error: " + e.message, isError: true }]);

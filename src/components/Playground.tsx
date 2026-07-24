@@ -10,6 +10,13 @@ export default function Playground() {
   const [showAST, setShowAST] = useState(true);
   const [activeTab, setActiveTab] = useState<'output' | 'ast'>('output');
   const [engine, setEngine] = useState<any>(null);
+  
+  // State for the interactive `ask` command
+  const [isWaitingInput, setIsWaitingInput] = useState(false);
+  const [currentPrompt, setCurrentPrompt] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const resolveInputRef = useRef<((value: string) => void) | null>(null);
+
   const consoleRef = useRef<HTMLDivElement>(null);
   const isAstLineRef = useRef(false);
 
@@ -38,6 +45,18 @@ export default function Playground() {
       }
     }).then((mod: any) => {
       instance = mod;
+
+      // The ASYNCIFY bridge
+      instance.ask_handler = async (promptText: string) => {
+        setCurrentPrompt(promptText);
+        setIsWaitingInput(true);
+        // If we switch to AST, switch back to output to show prompt
+        if (activeTab === 'ast') setActiveTab('output');
+        return new Promise<string>((resolve) => {
+          resolveInputRef.current = resolve;
+        });
+      };
+
       if (instance._initMoonWeb) {
         instance._initMoonWeb();
       }
@@ -53,21 +72,37 @@ export default function Playground() {
     if (consoleRef.current) {
       consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
     }
-  }, [logs]);
+  }, [logs, isWaitingInput, activeTab]);
 
   const runCode = () => {
     if (!engine) return;
     setLogs([]); // Clear
     setAstLogs([]);
+    setIsWaitingInput(false);
+    if (resolveInputRef.current) {
+      resolveInputRef.current(""); // Abort pending ask
+      resolveInputRef.current = null;
+    }
+    
     try {
       if (engine._setCompilerFlags) {
         engine._setCompilerFlags(showAST, false, false, false);
       }
-      const executeMoonCode = engine.cwrap('executeMoonCode', 'void', ['string']);
+      const executeMoonCode = engine.cwrap('executeMoonCode', 'void', ['string'], { async: true });
       executeMoonCode(code);
     } catch (e: any) {
       setLogs(prev => [...prev, { text: "Fatal Error: " + e.message, isError: true }]);
     }
+  };
+
+  const submitInput = () => {
+    if (resolveInputRef.current) {
+      resolveInputRef.current(inputValue);
+      setLogs(prev => [...prev, { text: currentPrompt + inputValue, isError: false }]);
+      resolveInputRef.current = null;
+    }
+    setInputValue("");
+    setIsWaitingInput(false);
   };
 
   const ansiToHtml = (text: string) => {
@@ -102,7 +137,7 @@ export default function Playground() {
             />
             Parse AST
           </label>
-          <button className="run-btn" onClick={runCode} disabled={!engine}>Run Code</button>
+          <button className="run-btn" onClick={runCode} disabled={!engine || isWaitingInput}>Run Code</button>
         </div>
       </header>
       <main className="split-view">
@@ -138,9 +173,24 @@ export default function Playground() {
           </div>
           <div className="console-output" ref={consoleRef} style={{ height: 'calc(100% - 46px)' }}>
             {activeTab === 'output' ? (
-              logs.map((log, i) => (
-                <div key={i} className={`log-line ${log.isError ? 'error' : ''}`} dangerouslySetInnerHTML={ansiToHtml(log.text)} />
-              ))
+              <>
+                {logs.map((log, i) => (
+                  <div key={i} className={`log-line ${log.isError ? 'error' : ''}`} dangerouslySetInnerHTML={ansiToHtml(log.text)} />
+                ))}
+                {isWaitingInput && (
+                  <div className="runner-input-line" style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', color: '#fff' }}>
+                    <span>{currentPrompt}</span>
+                    <input 
+                      autoFocus
+                      type="text"
+                      value={inputValue}
+                      onChange={e => setInputValue(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter') submitInput(); }}
+                      style={{ background: 'transparent', border: 'none', borderBottom: '1px solid #38bdf8', color: '#38bdf8', outline: 'none', flex: 1, fontFamily: 'monospace' }}
+                    />
+                  </div>
+                )}
+              </>
             ) : (
               <ASTViewer logs={astLogs} />
             )}
