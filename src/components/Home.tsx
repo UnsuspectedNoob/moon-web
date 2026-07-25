@@ -15,6 +15,37 @@ let x, y be 40, 30
 show "Max of \`x\` and \`y\` is \`max of x and y\`"`
   },
   {
+    title: 'comments.moon',
+    code: `# ---------------------------------------------------------
+# MULTILINE COMMENTS
+# Showcases Moon's elegant, brace-free multiline comments
+# that are driven purely by indentation.
+# ---------------------------------------------------------
+
+## This is a multiline comment!
+   Notice how there are no closing tags like \`*/\`!
+   As long as we indent past the start of the \`##\`,
+     it is safely consumed by the compiler.
+     
+     Even empty lines are part of it!
+   The compiler will ignore all of this completely.
+
+let greeting be "Hello from Moon!"
+
+# This is a standard single-line comment.
+show greeting
+
+## We can also use multiline comments to easily
+   disable blocks of code without having to put
+   a hash in front of every single line.
+   
+   let inactive (x):
+     give x * 2
+   end
+
+show "You can see that the disabled code did not run."`
+  },
+  {
     title: 'palindrome.moon',
     code: `# ---------------------------------------------------------
 # PALINDROME
@@ -22,56 +53,54 @@ show "Max of \`x\` and \`y\` is \`max of x and y\`"`
 # split, reverse, and join.
 # ---------------------------------------------------------
 let isPalindrome (word):
-  let rev_chars be reverse word as List
-  let rev_word be join rev_chars with ""
+  let reverse be join (reverse word as List) with ""
 
-  give word is rev_word
+  give "true" if word is reverse else "false"
 end
 
 show "--- Palindrome Algorithm ---"
-show "Is 'racecar' a palindrome?"
-show isPalindrome ("racecar")
+let word be "racecar"
+show "Is '\`word\`' a palindrome? \`isPalindrome word\`"
 
-show "Is 'moon' a palindrome?"
-show isPalindrome ("moon")`
+set word to "moon"
+show "Is '\`word\`' a palindrome? \`isPalindrome word\`"`
   },
   {
     title: 'merge_sort.moon',
     code: `let merge (left: List) with (right: List):
-  let total be [ ]
+  let result be [ ]
   let i, j be 1
+  let ll, rl be left's length, right's length
 
-  let leftLen be left's length
-  let rightLen be right's length
-
-  until i > leftLen or j > rightLen:
-    if left[i] < right[j]:
-      add left[i] to total
+  until i > ll or j > rl
+    if left.i < right.j:
+      add left.i to result
       update i + 1
     else:
-      add right[j] to total
+      add right.j to result
       update j + 1
     end
-  end
 
-  add left[i to end] to total unless i > leftLen
-  add right[j to end] to total unless j > rightLen
+  add left[i to end] to result unless i > ll
+  add right[j to end] to result unless j > rl
 
-  give total
+  give result
 end
 
 let a sorted (list: List):
-  if list's length < 2
-    give list
+  # a list is always sorted if it's length is not greater than 1
+  give list unless list's length > 1
 
+  # split list into halves
   let left be list[1 to end / 2]
   let right be list[end / 2 + 1 to end]
 
-  give merge (a sorted left) with (a sorted right)
+  give merge a sorted left with a sorted right
 end
 
 let list be [ 5, 3, 10, 8, 2, 1, 15, 7, 14, 4 ]
-show a sorted list`
+show "List: \`list\`"
+show "Sorted list: \`a sorted list\`"`
   },
   {
     title: 'fibonacci.moon',
@@ -255,7 +284,7 @@ export default function Home() {
           <div className={`bg-moon-pane border-t border-white/5 ${showOutput ? 'block animate-slide-down' : 'hidden'}`}>
             <div className="px-6 py-2 flex items-center justify-between text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 bg-[#020617] border-b border-white/5">
               <span>Console Output</span>
-              <button 
+              <button
                 onClick={() => { setLogs([]); setShowOutput(false); }}
                 className="flex items-center gap-1.5 hover:text-rose-400 transition-colors"
                 title="Clear Output"
