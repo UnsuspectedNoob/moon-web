@@ -61,6 +61,34 @@ show a
 `
   },
   {
+    title: "Multiline Comments",
+    content: (
+      <p>Moon features elegant, brace-free multiline comments driven purely by indentation. Instead of clunky closing tags like <code>*/</code>, you start a multiline block with <code>##</code>. As long as the following lines are indented past the starting <code>##</code>, they are safely consumed by the compiler. It's a great way to document your code or quickly disable blocks of logic!</p>
+    ),
+    code: `## This is a multiline comment!
+   Notice how there are no closing tags!
+   As long as we indent past the start of the \`##\`,
+     it is safely consumed by the compiler.
+     
+     Even empty lines are part of it!
+   The compiler will ignore all of this completely.
+
+let greeting be "Hello from Moon!"
+
+# This is a standard single-line comment.
+show greeting
+
+## We can also use multiline comments to easily
+   disable blocks of code without having to put
+   a hash in front of every single line.
+   
+   let inactive (x):
+     give x * 2
+   end
+
+show "You can see that the disabled code did not run."`
+  },
+  {
     title: "String Interpolation",
     content: (
       <p>Now that we have variables, let's mix them with text! Strings are wrapped in double quotes. To instantly insert a variable inside a string, we use <Tooltip word="interpolation" /> by wrapping the variable in backticks <code>\` \`</code>.</p>
