@@ -296,15 +296,10 @@ show dict`
   name, health: 100,
   my info:
     give "\`my name\` has \`my health\` health."
-  end,
-  my (self) take_damage(dmg):
-    update self.health - dmg
   end
 end
 
 let p1 be Player with name: "Emrys" end
-p1.take_damage(20)
-
 show p1's info`
   },
   {
