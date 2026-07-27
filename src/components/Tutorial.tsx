@@ -20,7 +20,8 @@ const Tooltip = ({ word, text, children }: { word: string; text?: string; childr
     "index": "The numbered position of an item in a list (starting from 1 in Moon).",
     "1-based": "In Moon, counting starts at 1 (just like in natural human language), rather than 0 which is typically used for machines.",
     "blueprint": "A custom template (or 'type') that defines how a piece of data should look and behave.",
-    "comments": "Lines starting with # are completely ignored by the computer. They are meant for human developers to read."
+    "comments": "Lines starting with # are completely ignored by the computer. They are meant for human developers to read.",
+    "multiline strings": "Strings that are allowed to span across multiple lines of text, using the triple single-quote syntax."
   };
 
   const definition = definitions[word.toLowerCase()] || "Definition not found.";
@@ -95,6 +96,18 @@ show "You can see that the disabled code did not run."`
     ),
     code: `let number be 10
 show "The square of \`number\` is \`number * number\`!"`
+  },
+  {
+    title: "Multiline Strings",
+    content: (
+      <p>Sometimes you need text that spans across multiple lines. Regular double-quoted strings (<code>"</code>) cannot contain newlines. Instead, Moon provides a special <Tooltip word="multiline strings" text="multiline string">multiline string</Tooltip> syntax using triple single-quotes <code>'''</code>. These strings can span multiple lines and fully support interpolation!</p>
+    ),
+    code: `let name be "Emrys"
+let message be '''Hello \`name\`!
+Welcome to the Moon programming language.
+You can write as many lines as you want here!'''
+
+show message`
   },
   {
     title: "Native Phrases (Standard Library)",
