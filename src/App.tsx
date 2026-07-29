@@ -3,11 +3,12 @@ import { useState } from 'react'
 import Home from './components/Home'
 import Playground from './components/Playground'
 import Tutorial, { chapters } from './components/Tutorial'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown, Terminal, GraduationCap, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import './index.css'
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(true)
   const [tutorialDropdownOpen, setTutorialDropdownOpen] = useState(false)
 
   return (
@@ -24,14 +25,16 @@ function App() {
 
         {/* Sidebar */}
         <nav className={`
-          fixed inset-y-0 left-0 z-50 w-64 bg-moon-pane border-r border-moon-border
-          transform transition-transform duration-300 ease-in-out
+          fixed inset-y-0 left-0 z-50 bg-moon-pane border-r border-moon-border
+          transform transition-all duration-300 ease-in-out
           md:relative md:translate-x-0 flex flex-col
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          ${sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64'}
+          ${desktopSidebarOpen ? 'md:w-64' : 'md:w-16'}
         `}>
-          <div className="flex items-center justify-between p-6 border-b border-white/5">
+          <div className={`flex items-center p-6 border-b border-white/5 h-[73px] ${desktopSidebarOpen ? 'justify-between' : 'justify-center md:px-0'}`}>
             <Link to="/" className="text-xl font-bold tracking-tight text-white flex items-center gap-2" onClick={() => setSidebarOpen(false)}>
-              <span className="text-moon-accent text-2xl">🌙</span> M.O.O.N.
+              <span className="text-moon-accent text-2xl">🌙</span> 
+              <span className={desktopSidebarOpen ? '' : 'md:hidden'}>M.O.O.N.</span>
             </Link>
             <button 
               className="md:hidden text-moon-muted hover:text-white transition-colors"
@@ -41,25 +44,38 @@ function App() {
             </button>
           </div>
           
-          <div className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-6">
+          <div className="flex-1 overflow-y-auto py-6 flex flex-col gap-6 px-4">
             <Link 
               to="/playground" 
-              className="block px-4 py-2 rounded-lg text-sm font-semibold text-moon-muted hover:text-white hover:bg-white/5 transition-colors"
+              className={`flex items-center gap-3 py-2 rounded-lg text-sm font-semibold text-moon-muted hover:text-white hover:bg-white/5 transition-colors ${desktopSidebarOpen ? 'px-4' : 'justify-center px-0'}`}
               onClick={() => setSidebarOpen(false)}
+              title={!desktopSidebarOpen ? "Playground" : ""}
             >
-              Playground
+              <Terminal size={20} className="shrink-0" />
+              <span className={desktopSidebarOpen ? '' : 'md:hidden'}>Playground</span>
             </Link>
             
             <div className="flex flex-col gap-2">
               <button 
-                onClick={() => setTutorialDropdownOpen(!tutorialDropdownOpen)}
-                className="w-full flex items-center justify-between px-4 py-2 rounded-lg text-sm font-semibold text-moon-muted hover:text-white hover:bg-white/5 transition-colors"
+                onClick={() => {
+                  if (!desktopSidebarOpen) {
+                    setDesktopSidebarOpen(true)
+                    setTutorialDropdownOpen(true)
+                  } else {
+                    setTutorialDropdownOpen(!tutorialDropdownOpen)
+                  }
+                }}
+                className={`w-full flex items-center gap-3 py-2 rounded-lg text-sm font-semibold text-moon-muted hover:text-white hover:bg-white/5 transition-colors ${desktopSidebarOpen ? 'px-4 justify-between' : 'justify-center px-0'}`}
+                title={!desktopSidebarOpen ? "Tutorial" : ""}
               >
-                <span>Tutorial</span>
-                <ChevronDown size={16} className={`transform transition-transform ${tutorialDropdownOpen ? 'rotate-180' : ''}`} />
+                <div className="flex items-center gap-3">
+                  <GraduationCap size={20} className="shrink-0" />
+                  <span className={desktopSidebarOpen ? '' : 'md:hidden'}>Tutorial</span>
+                </div>
+                {desktopSidebarOpen && <ChevronDown size={16} className={`transform transition-transform ${tutorialDropdownOpen ? 'rotate-180' : ''}`} />}
               </button>
               
-              <div className={`flex flex-col gap-1 pl-4 border-l-2 border-white/5 ml-6 overflow-hidden transition-all duration-300 ${tutorialDropdownOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className={`flex flex-col gap-1 pl-4 border-l-2 border-white/5 ml-6 overflow-hidden transition-all duration-300 ${tutorialDropdownOpen && desktopSidebarOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                 {chapters.map((chapter, i) => (
                   <Link 
                     key={i} 
@@ -72,6 +88,16 @@ function App() {
                 ))}
               </div>
             </div>
+          </div>
+
+          <div className="hidden md:flex p-4 border-t border-white/5">
+            <button 
+              onClick={() => setDesktopSidebarOpen(!desktopSidebarOpen)} 
+              className="p-2 w-full flex justify-center rounded-lg text-moon-muted hover:text-white hover:bg-white/5 transition-colors"
+              title={desktopSidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
+            >
+              {desktopSidebarOpen ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
+            </button>
           </div>
         </nav>
 
