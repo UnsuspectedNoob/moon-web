@@ -32,7 +32,10 @@ function App() {
           ${desktopSidebarOpen ? 'md:w-64' : 'md:w-16'}
         `}>
           <div className={`flex items-center p-6 border-b border-white/5 h-[73px] ${desktopSidebarOpen ? 'justify-between' : 'justify-center md:px-0'}`}>
-            <Link to="/" className="text-xl font-bold tracking-tight text-white flex items-center gap-2" onClick={() => setSidebarOpen(false)}>
+            <Link to="/" className="text-xl font-bold tracking-tight text-white flex items-center gap-2" onClick={() => {
+              setSidebarOpen(false);
+              document.getElementById('main-scroll-container')?.scrollTo({ top: 0, behavior: 'smooth' });
+            }}>
               <span className="text-moon-accent text-2xl">🌙</span> 
               <span className={desktopSidebarOpen ? '' : 'md:hidden'}>M.O.O.N.</span>
             </Link>
@@ -115,7 +118,7 @@ function App() {
           </div>
 
           {/* Page Container */}
-          <div className="flex-1 overflow-y-auto md:pt-0 pt-16 h-full">
+          <div id="main-scroll-container" className="flex-1 overflow-y-auto md:pt-0 pt-16 h-full">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/playground" element={<Playground />} />

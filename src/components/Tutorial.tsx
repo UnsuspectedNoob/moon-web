@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 
 const Tooltip = ({ word, text, children }: { word: string; text?: string; children?: ReactNode }) => {
   const definitions: Record<string, string> = {
+    "keyword": "A reserved word built directly into the language (like 'let', 'set', 'if', 'while'). You cannot use these as variable names.",
     "primitives": "The most basic types of data a computer understands, like numbers, text (strings), and true/false (booleans).",
     "assignment": "Giving a variable a specific value to hold on to.",
     "interpolation": "Inserting the value of a variable directly into a string (text) so it becomes part of the sentence.",
@@ -41,7 +42,7 @@ export const chapters = [
   {
     title: "Variables and Primitives",
     content: (
-      <p>Every story starts somewhere! In Moon, we start by creating variables using the <code>let</code> and <code>be</code> keywords. You can store basic data types (called <Tooltip word="primitives">primitives</Tooltip>) like numbers, text (strings), true/false values, and even <code>nil</code> (which means nothing). You can print anything to the screen using the <code>show</code> command. Notice how you can also group multiple <Tooltip word="assignment" text="assignments" /> on a single line! Finally, any lines starting with a <Tooltip word="comments">#</Tooltip> are comments, which the computer completely ignores.</p>
+      <p>Every story starts somewhere! In Moon, we start by creating variables using the <Tooltip word="keyword"><code>let</code></Tooltip> and <Tooltip word="keyword"><code>be</code></Tooltip> keywords. You can store basic data types (called <Tooltip word="primitives">primitives</Tooltip>) like numbers, text (strings), true/false values, and even <code>nil</code> (which means nothing). You can print anything to the screen using the <code>show</code> command. Notice how you can also group multiple <Tooltip word="assignment" text="assignments" /> on a single line! Finally, any lines starting with a <Tooltip word="comments">#</Tooltip> are comments, which the computer completely ignores.</p>
     ),
     code: `let age be 27
 let name be "Munachi"
@@ -60,6 +61,22 @@ show a
 
 # You can show the other variables below
 `
+  },
+  {
+    title: "Setting and Reassigning",
+    content: (
+      <p>While <Tooltip word="keyword"><code>let</code></Tooltip> is used to declare a brand new variable, you use the <Tooltip word="keyword"><code>set</code></Tooltip> keyword to change the value of a variable that already exists! The <Tooltip word="keyword"><code>set</code></Tooltip> keyword can also be used to update properties inside dictionaries or items in lists. Attempting to use <code>set</code> on a variable that hasn't been declared yet will result in a helpful error.</p>
+    ),
+    code: `let player_score be 0
+show "Initial score: " + player_score
+
+# Updating an existing variable
+set player_score to 100
+show "New score: " + player_score
+
+let config be { difficulty: "Easy" }
+set config.difficulty to "Hard"
+show "Difficulty changed to: " + config.difficulty`
   },
   {
     title: "Multiline Comments",
@@ -211,10 +228,16 @@ end`
       <p>Moon has another trick for logical operations called <Tooltip word="sticky subjects" />. When you use <code>and</code> or <code>or</code>, Moon remembers the variable you were just talking about! This means you don't have to repeat the variable name, saving you time and making the code read beautifully.</p>
     ),
     code: `let n be 5
+let role be "admin"
 
 # Notice we don't have to say 'and n is not 10'!
 if n > 0 and is not 10:
   show "n is greater than 0, and n is not 10!"
+end
+
+# Works perfectly with 'or' as well!
+if role is "admin" or is "moderator":
+  show "You have elevated privileges."
 end`
   },
   {
@@ -373,12 +396,12 @@ export default function Tutorial() {
 
       <div className="tutorial-content flex flex-col gap-6">
         {chapters.map((chapter, i) => (
-          <details key={i} className="group bg-moon-pane border border-moon-border rounded-2xl overflow-hidden shadow-lg transition-all" id={`chapter-${i + 1}`} open={i === 0}>
-            <summary className="p-5 md:p-6 text-xl md:text-2xl font-bold text-white cursor-pointer select-none list-none flex justify-between items-center hover:bg-white/5 transition-colors">
+          <details key={i} className="group bg-moon-pane border border-moon-border rounded-2xl shadow-lg transition-all" id={`chapter-${i + 1}`} open={i === 0}>
+            <summary className="p-5 md:p-6 text-xl md:text-2xl font-bold text-white cursor-pointer select-none list-none flex justify-between items-center hover:bg-white/5 transition-colors group-open:rounded-t-2xl rounded-2xl">
               <span><span className="text-moon-accent mr-3">{i + 1}.</span> {chapter.title}</span>
               <span className="transform group-open:rotate-180 transition-transform text-moon-muted">▼</span>
             </summary>
-            <div className="p-5 md:p-6 pt-0 border-t border-white/5 bg-[#020617]/50 mt-2">
+            <div className="p-5 md:p-6 pt-0 border-t border-white/5 bg-[#020617]/50 mt-2 rounded-b-2xl">
               <div className="text-slate-200 text-base md:text-lg mb-8 leading-relaxed">
                 {chapter.content}
               </div>
