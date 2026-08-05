@@ -7,7 +7,10 @@ import MoonModule from '../moon.js';
 const showcases = [
   {
     title: 'max.moon',
-    code: `let max of (a: Number) and (b: Number):
+    code: `## MAX
+   Returns the greater of two numbers.
+
+let max of (a: Number) and (b: Number):
   give a if a > b else b
 end
 
@@ -16,32 +19,33 @@ show "Max of \`x\` and \`y\` is \`max of x and y\`"`
   },
   {
     title: 'palindrome.moon',
-    code: `# ---------------------------------------------------------
-# PALINDROME
-# Showcases Moon's elegant phrasal standard library:
-# split, reverse, and join.
-# ---------------------------------------------------------
-let isPalindrome (word):
-  let reverse be join (reverse word as List) with ""
+    code: `## PALINDROME
+   Showcases Moon's elegant phrasal infix definitions:
+   argument-led phrases, list casting, and '=' equality.
 
-  give "true" if word is reverse else "false"
+let (s: String) is a palindrome:
+  let rev be join (reverse s as List) with ""
+  give s = rev
 end
 
 show "--- Palindrome Algorithm ---"
 let word be "racecar"
-show "Is '\`word\`' a palindrome? \`isPalindrome word\`"
+show "Is '\`word\`' a palindrome? \`word is a palindrome\`"
 
 set word to "moon"
-show "Is '\`word\`' a palindrome? \`isPalindrome word\`"`
+show "Is '\`word\`' a palindrome? \`word is a palindrome\`"`
   },
   {
     title: 'merge_sort.moon',
-    code: `let merge (left: List) with (right: List):
+    code: `## MERGE SORT
+   An expressive and recursive divide-and-conquer sorting algorithm.
+
+let merge (left: List) with (right: List):
   let result be [ ]
   let i, j be 1
   let ll, rl be left's length, right's length
 
-  until i > ll or j > rl
+  until i > ll or j > rl:
     if left.i < right.j:
       add left.i to result
       update i + 1
@@ -49,6 +53,7 @@ show "Is '\`word\`' a palindrome? \`isPalindrome word\`"`
       add right.j to result
       update j + 1
     end
+  end
 
   add left[i to end] to result unless i > ll
   add right[j to end] to result unless j > rl
@@ -57,10 +62,10 @@ show "Is '\`word\`' a palindrome? \`isPalindrome word\`"`
 end
 
 let a sorted (list: List):
-  # a list is always sorted if it's length is not greater than 1
+  ## A list is always sorted if its length is 1 or less
   give list unless list's length > 1
 
-  # split list into halves
+  ## Split list into halves
   let left be list[1 to end / 2]
   let right be list[end / 2 + 1 to end]
 
@@ -73,18 +78,16 @@ show "Sorted list: \`a sorted list\`"`
   },
   {
     title: 'fibonacci.moon',
-    code: `# ---------------------------------------------------------
-# ITERATIVE FIBONACCI
-# Showcases Moon's action statements, fast VM math, 
-# and robust 'for' loops.
-# ---------------------------------------------------------
+    code: `## ITERATIVE FIBONACCI
+   Showcases Moon's action statements, fast VM math, 
+   and robust 'for' loops.
+
 let fib_iterative (n):
   if n <= 1:
     give n
   end
 
-  let a be 0
-  let b be 1
+  let a, b be 0, 1
 
   for i from 2 to n by 1:
     let temp be a + b
@@ -97,7 +100,7 @@ end
 
 show "--- Fibonacci Algorithm ---"
 show "Iterative (n=50):"
-show fib_iterative (50)`
+show fib_iterative 50`
   }
 ];
 

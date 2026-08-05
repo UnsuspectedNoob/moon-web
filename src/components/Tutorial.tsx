@@ -6,23 +6,30 @@ import type { ReactNode } from 'react';
 const Tooltip = ({ word, text, children }: { word: string; text?: string; children?: ReactNode }) => {
   const definitions: Record<string, string> = {
     "keyword": "A reserved word built directly into the language (like 'let', 'set', 'if', 'while'). You cannot use these as variable names.",
-    "primitives": "The most basic types of data a computer understands, like numbers, text (strings), and true/false (booleans).",
+    "primitives": "The most basic types of data a computer understands, like numbers, text (strings), true/false (booleans), and nil.",
     "assignment": "Giving a variable a specific value to hold on to.",
-    "interpolation": "Inserting the value of a variable directly into a string (text) so it becomes part of the sentence.",
-    "lists": "An ordered collection of items, like a shopping list. Written with square brackets.",
-    "dictionaries": "A collection of items stored as name-value pairs, like a real dictionary mapping words to definitions.",
+    "spaced identifiers": "Variables and phrases made of multiple words separated by spaces, like 'user name' or 'first name'.",
+    "broadcasting": "Assigning a single value to multiple variables simultaneously in a single let statement.",
+    "interpolation": "Inserting the value of a variable or expression directly into a string using backticks ` `.",
+    "lists": "An ordered collection of items written with square brackets.",
+    "dictionaries": "A collection of items stored as key-value pairs written with curly braces.",
     "appends": "Adding an item to the very end of a list.",
-    "chained comparisons": "Checking multiple conditions in a single continuous math line, like 1 < age < 18.",
-    "sticky subjects": "Moon remembers what you were just talking about for logical operations, so you don't have to repeat the variable name (e.g. x < 100 and is not 30).",
-    "comprehensions": "A quick, one-line way to build a new list by filtering or modifying an existing list or range.",
-    "phrasal": "Written like a natural English sentence, rather than typical computer code.",
-    "multiple dispatch": "Writing multiple versions of the same function, and letting Moon automatically pick the right one based on the type of data you give it.",
-    "instantiate": "To bring a blueprint to life by creating an actual working copy of it in memory.",
+    "chained comparisons": "Checking multiple conditions in a single continuous mathematical inequality, like 10 < age <= 100.",
+    "sticky subjects": "Moon automatically remembers the subject of your logical comparisons across 'and' and 'or' without having to repeat the variable name.",
+    "comprehensions": "A quick, one-line expression to build a new list or dictionary by transforming or filtering elements.",
+    "phrasal": "Written like a natural English sentence rather than conventional cryptic code.",
+    "multiple dispatch": "Writing multiple versions of a function that Moon dynamically routes based on runtime parameter types.",
+    "union types": "Allowing a parameter to match any of multiple specified types (e.g. Number or String).",
+    "infix": "Phrasal functions where an argument leads the sentence, such as 'text repeated 3 times'.",
+    "instantiate": "Creating a concrete, working copy of a blueprint in memory with Type { ... }.",
     "index": "The numbered position of an item in a list (starting from 1 in Moon).",
-    "1-based": "In Moon, counting starts at 1 (just like in natural human language), rather than 0 which is typically used for machines.",
-    "blueprint": "A custom template (or 'type') that defines how a piece of data should look and behave.",
-    "comments": "Lines starting with # are completely ignored by the computer. They are meant for human developers to read.",
-    "multiline strings": "Strings that are allowed to span across multiple lines of text, using the triple single-quote syntax."
+    "1-based": "In Moon, list indexing starts at 1 just like natural human counting, rather than machine 0.",
+    "bipolar indexing": "Accessing items relative to the end of a list using negative numbers, like list[-1] for the last element.",
+    "blueprint": "A custom type template defining default properties and methods for structured objects.",
+    "extension methods": "Adding new methods and active properties to types from anywhere using possessive 's phrasing.",
+    "type casting": "Explicitly converting a value from one type to another or hydrating a dictionary with the 'as' keyword.",
+    "comments": "Lines starting with # or indented blocks starting with ## that are ignored by the compiler.",
+    "multiline strings": "Strings spanning across multiple lines using triple single-quotes '''...'''."
   };
 
   const definition = definitions[word.toLowerCase()] || "Definition not found.";
@@ -42,334 +49,499 @@ export const chapters = [
   {
     title: "Variables and Primitives",
     content: (
-      <p>Every story starts somewhere! In Moon, we start by creating variables using the <Tooltip word="keyword"><code>let</code></Tooltip> and <Tooltip word="keyword"><code>be</code></Tooltip> keywords. You can store basic data types (called <Tooltip word="primitives">primitives</Tooltip>) like numbers, text (strings), true/false values, and even <code>nil</code> (which means nothing). You can print anything to the screen using the <code>show</code> command. Notice how you can also group multiple <Tooltip word="assignment" text="assignments" /> on a single line! Finally, any lines starting with a <Tooltip word="comments">#</Tooltip> are comments, which the computer completely ignores.</p>
+      <p>Every story starts somewhere! In Moon, we declare variables using <Tooltip word="keyword"><code>let</code></Tooltip> and <Tooltip word="keyword"><code>be</code></Tooltip>. Identifiers can be single words or natural multi-word <Tooltip word="spaced identifiers">spaced identifiers</Tooltip> like <code>user name</code>. You can store basic <Tooltip word="primitives">primitives</Tooltip> like numbers, text, booleans, and <code>nil</code>. Moon also supports multi-variable <Tooltip word="assignment" text="declarations" /> and 1-to-N <Tooltip word="broadcasting" /> on a single line! Print anything to the console using <code>show</code>, and write <Tooltip word="comments"># comments</Tooltip> for developer notes.</p>
     ),
-    code: `let age be 27
-let name be "Munachi"
+    code: `## VARIABLES & PRIMITIVES
+   Demonstrates spaced identifiers, multi-variable declarations,
+   and 1-to-N broadcasting.
+
+let age be 27
 let is_active be true
 let nothing be nil
 
-# Multiple assignments at once!
-let a, b, c be 50
+# Natural multi-word spaced identifiers!
+let user name be "Munachi"
 
-# Assignments to different variables at once
-let x, y, z be 10, 20, 30
+# Multi-variable spaced declarations
+let first name, last name be "Munachiso", "Ukpai"
 
-show name
-show age
-show a
+# 1-to-N broadcasting
+let width, height be 100
 
-# You can show the other variables below
+show "\`first name\` \`last name\` is \`age\` years old."
+show "Dimensions: \`width\` x \`height\`"
 `
   },
   {
     title: "Setting and Reassigning",
     content: (
-      <p>While <Tooltip word="keyword"><code>let</code></Tooltip> is used to declare a brand new variable, you use the <Tooltip word="keyword"><code>set</code></Tooltip> keyword to change the value of a variable that already exists! The <Tooltip word="keyword"><code>set</code></Tooltip> keyword can also be used to update properties inside dictionaries or items in lists. Attempting to use <code>set</code> on a variable that hasn't been declared yet will result in a helpful error.</p>
+      <p>While <Tooltip word="keyword"><code>let</code></Tooltip> declares new variables, use <Tooltip word="keyword"><code>set</code></Tooltip> and <code>to</code> to reassign variables, mutate dictionary properties, or update list items. Moon also supports multi-variable <code>set</code> reassignments in a single statement. Attempting to <code>set</code> an undeclared variable produces a helpful compile-time error.</p>
     ),
-    code: `let player_score be 0
-show "Initial score: " + player_score
+    code: `## SET & REASSIGNING
+   Updating variables, dictionaries, and multiple targets.
 
-# Updating an existing variable
-set player_score to 100
-show "New score: " + player_score
+let player score be 0
+show "Initial score: \`player score\`"
 
+# Updating single variables
+set player score to 100
+show "New score: \`player score\`"
+
+# Multi-variable reassignment
+let x, y be 10, 20
+set x, y to 30, 40
+show "Coordinates: \`x\`, \`y\`"
+
+# Modifying dictionaries with bracket or possessive notation
 let config be { difficulty: "Easy" }
-set config.difficulty to "Hard"
-show "Difficulty changed to: " + config.difficulty`
+set config["difficulty"] to "Hard"
+set config's difficulty to "Nightmare"
+show "Difficulty: \`config's difficulty\`"
+`
   },
   {
     title: "Multiline Comments",
     content: (
-      <p>Moon features elegant, brace-free multiline comments driven purely by indentation. Instead of clunky closing tags like <code>*/</code>, you start a multiline block with <code>##</code>. As long as the following lines are indented past the starting <code>##</code>, they are safely consumed by the compiler. It's a great way to document your code or quickly disable blocks of logic!</p>
+      <p>Moon features elegant, brace-free <Tooltip word="comments">multiline comments</Tooltip> driven purely by indentation. Instead of clunky closing tags, you start a block with <code>##</code>. As long as the following lines are indented past the <code>##</code>, they are safely ignored by the compiler. It's a clean way to write documentation or temporarily disable code blocks!</p>
     ),
-    code: `## This is a multiline comment!
-   Notice how there are no closing tags!
-   As long as we indent past the start of the \`##\`,
-     it is safely consumed by the compiler.
-     
-     Even empty lines are part of it!
-   The compiler will ignore all of this completely.
+    code: `## This is an indentation-based multiline comment!
+   Notice how there are no closing tags required!
+   As long as we indent past the start of the ##,
+   the compiler ignores all of this completely.
 
 let greeting be "Hello from Moon!"
-
-# This is a standard single-line comment.
 show greeting
 
 ## We can also use multiline comments to easily
-   disable blocks of code without having to put
-   a hash in front of every single line.
+   disable blocks of code without prepending '#' to each line.
    
    let inactive (x):
      give x * 2
    end
 
-show "You can see that the disabled code did not run."`
+show "The disabled code above was safely ignored."
+`
   },
   {
-    title: "String Interpolation",
+    title: "String Interpolation & Multiline Strings",
     content: (
-      <p>Now that we have variables, let's mix them with text! Strings are wrapped in double quotes. To instantly insert a variable inside a string, we use <Tooltip word="interpolation" /> by wrapping the variable in backticks <code>\` \`</code>.</p>
+      <p>Double-quoted strings support dynamic <Tooltip word="interpolation" /> by wrapping variables or calculations in backticks <code>\` \`</code>. For text that spans multiple lines, Moon provides <Tooltip word="multiline strings" /> using triple single-quotes <code>'''...'''</code>, which also fully support interpolation!</p>
     ),
-    code: `let number be 10
-show "The square of \`number\` is \`number * number\`!"`
-  },
-  {
-    title: "Multiline Strings",
-    content: (
-      <p>Sometimes you need text that spans across multiple lines. Regular double-quoted strings (<code>"</code>) cannot contain newlines. Instead, Moon provides a special <Tooltip word="multiline strings" text="multiline string">multiline string</Tooltip> syntax using triple single-quotes <code>'''</code>. These strings can span multiple lines and fully support interpolation!</p>
-    ),
-    code: `let name be "Emrys"
-let message be '''Hello \`name\`!
-Welcome to the Moon programming language.
-You can write as many lines as you want here!'''
+    code: `## STRINGS & INTERPOLATION
+   Backtick interpolation and triple-quoted multiline strings.
 
-show message`
+let item, price, qty be "Potion", 15, 3
+show "Purchased \`qty\`x \`item\` for $\`price * qty\`."
+
+let letter be '''Dear Adventurer,
+Welcome to the realm of Moon.
+Your current gold is: $\`price * qty * 2\`.
+Safe travels!'''
+
+show letter
+`
   },
   {
-    title: "Native Phrases (Standard Library)",
+    title: "Lists & 1-Based / Negative Indexing",
     content: (
-      <p>Moon comes with built-in <Tooltip word="phrasal">phrasal functions</Tooltip> that read like natural English! You can use <code>random from X to Y</code>, <code>floor of</code>, <code>uppercase</code>, and <code>lowercase</code>.<br /><br />Moon also features the incredible <code>ask</code> command, which pauses your program, prompts the user for input right here in the terminal, and waits for their response! Try it out below!</p>
+      <p><Tooltip word="lists">Lists</Tooltip> are ordered sequences enclosed in <code>[ ]</code>. Moon uses <Tooltip word="1-based">1-based indexing</Tooltip> for human-friendly counting (<code>list[1]</code>), fast bracketless dot notation (<code>list.1</code>), and <Tooltip word="bipolar indexing">bipolar / negative indexing</Tooltip> from the end (<code>list[-1]</code>). Access list size anytime using <code>list's length</code>.</p>
     ),
-    code: `let name be ask "What is your name? "
-let choice be random from 1 to 10
-let upper be uppercase name
+    code: `## LISTS & BIPOLAR INDEXING
+   1-based counting, dot-indexing, and negative indexing.
 
-show "Hello \`upper\`, your lucky number is \`choice\`!"`
+let party be [ "Warrior", "Mage", "Rogue", "Healer" ]
+
+# 1-based bracket indexing
+show "First hero: \`party[1]\`"
+
+# Bracketless dot indexing
+show "Second hero: \`party.2\`"
+
+# Negative / bipolar indexing from the end
+show "Last hero: \`party[-1]\`"
+show "Second to last: \`party[-2]\`"
+
+show "Party size: \`party's length\`"
+`
   },
   {
-    title: "Lists and Dictionaries",
+    title: "Dictionaries & Property Access",
     content: (
-      <p>Beyond single values, you'll often want to group data together. We use <Tooltip word="lists">lists</Tooltip> (square brackets) for ordered items, and <Tooltip word="dictionaries">dictionaries</Tooltip> (curly braces) for labeled items. You can access what's inside them using standard brackets <code>[]</code>, or by using Moon's natural <code>'s</code> syntax which reads just like English!</p>
+      <p><Tooltip word="dictionaries">Dictionaries</Tooltip> store key-value mappings wrapped in <code>{'{ }'}</code>. You can read and write values using standard bracket notation (<code>dict["key"]</code>), dot notation (<code>dict.key</code>), or Moon's natural possessive syntax (<code>dict's key</code>).</p>
     ),
-    code: `let inventory be [ "sword", "shield" ]
-show "Second item is: " + inventory[2] # or inventory.2
+    code: `## DICTIONARIES
+   Key-value pairs with bracket, dot, and possessive access.
 
-let user be {
+let player be {
   name: "Emrys",
-  speed: "Fast"
+  level: 42,
+  class: "Archmage"
 }
-show "The user's name is: \`user's name\`"`
+
+# Possessive access
+show "Player: \`player's name\` (Lvl \`player's level\`)"
+
+# Bracket access
+let player class be player["class"]
+show "Class: \`player class\`"
+
+# Mutating dictionary values
+set player's level to 43
+show "Leveled up! New level: \`player's level\`"
+`
   },
   {
-    title: "Ranges",
+    title: "Ranges & Slices",
     content: (
-      <p>What if you need a long sequence of numbers, like 1 to 100? Instead of typing them out in a list, Moon gives you Ranges. Using the <code>to</code> and <code>by</code> keywords, you can effortlessly generate sequences. You can even embed these ranges directly inside your <Tooltip word="lists" />!</p>
+      <p>Generate numeric sequences effortlessly with <code>to</code> and <code>by</code>. Slice lists forwards with <code>list[start to end]</code>, slice in reverse with <code>list[end to 1]</code>, and compose ranges directly inside list literals!</p>
     ),
-    code: `let my_range be 1 to 10 by 2
-show my_range
+    code: `## RANGES & ADVANCED SLICING
+   Generating ranges, slicing forwards, and slicing backwards.
 
-let combined be [ 5 to 7, 10 to 12 ]
-show combined`
+let odd numbers be 1 to 9 by 2
+show odd numbers
+
+let inventory be [ "Sword", "Shield", "Potion", "Map", "Key" ]
+
+# Slicing from index 2 to the end
+let sub items be inventory[2 to end]
+show "Sub-inventory: \`sub items\`"
+
+# Slicing backwards
+let reversed items be inventory[end to 1]
+show "Reversed: \`reversed items\`"
+
+# Combining ranges into a list
+let sequence be [ 1 to 3, 7 to 9 ]
+show sequence
+`
+  },
+  {
+    title: "List & Dictionary Comprehensions",
+    content: (
+      <p><Tooltip word="comprehensions">Comprehensions</Tooltip> provide a concise, expressive syntax for building transformed and filtered lists or dictionaries in a single line using <code>[ for each x in ... keep ... if ... ]</code> and <code>{'{ for each k in ... keep k: v }'}</code>.</p>
+    ),
+    code: `## COMPREHENSIONS
+   Inline creation of filtered lists and transformed dictionaries.
+
+# Filtered list comprehension
+let evens be [ for each x in 1 to 10 keep x if x mod 2 = 0 ]
+show "Even numbers: \`evens\`"
+
+# List comprehension with transformation
+let squares be [ for each n in 1 to 5 keep n * n ]
+show "Squares: \`squares\`"
+
+# Dictionary comprehension
+let powers be { for each n in 1 to 4 keep n: n * n * n }
+show "Cubes map: \`powers\`"
+`
   },
   {
     title: "Data Actions (State Mutation)",
     content: (
       <>
-        <p>We've created variables and collections, but how do we change them? Most programming languages might use math symbols (like <code>=</code>), but Moon prefers clear English verbs.</p>
+        <p>Moon replaces cryptic symbol reassignment with clean English action verbs:</p>
         <ul className="list-disc pl-6 my-4 space-y-2 text-slate-300">
-          <li>Use <code>set</code> when you want to change a variable's value (<Tooltip word="assignment" />).</li>
-          <li>Use <code>update</code> when you want to perform math on a variable.</li>
-          <li>Use <code>add</code> to mathematically add numbers together, stitch text strings together, or to <Tooltip word="appends" text="append" /> items to the end of a list!</li>
+          <li><code>set</code> to reassign variables or properties (<Tooltip word="assignment" />).</li>
+          <li><code>update</code> to perform in-place arithmetic (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>).</li>
+          <li><code>add</code> to increment numbers, concatenate strings, or <Tooltip word="appends" text="append" /> items to lists!</li>
         </ul>
       </>
     ),
-    code: `let hp be 100
-update hp - 20
+    code: `## DATA ACTIONS
+   Expressive state mutations with 'set', 'update', and 'add'.
+
+let hp be 100
+update hp - 25
+show "HP after hit: \`hp\`"
+
 add 10 to hp
-show "HP is now: \`hp\`"
+show "HP after heal: \`hp\`"
 
-let greeting be "Hello"
-add " World!" to greeting
-show greeting
+let title be "Arch"
+add "mage" to title
+show "Title: \`title\`"
 
-let inventory be []
-add "sword", "shield" to inventory
-show inventory`
+let inventory be [ "Dagger" ]
+add "Shield", "Potion" to inventory
+show "Inventory: \`inventory\`"
+`
   },
   {
-    title: "Control Flow & Blocks",
+    title: "Control Flow & Modifiers",
     content: (
-      <>
-        <p>Sometimes you only want code to run if a certain condition is met. This is where <code>if</code>, <code>else if</code>, and <code>else</code> come in. If you have multiple things to do, you can open a block using a colon <code>:</code> and close it with the <code>end</code> keyword.</p>
-        <p>But here's a secret: if you only have a single statement to execute, you can skip the block entirely! </p>
-        <p>Moon also provides the intuitive opposite of <code>if</code>: <code>unless</code>. These can even be placed at the end of a line!</p>
-      </>
+      <p>Control flow in Moon uses <code>if</code>, <code>else if</code>, <code>else</code>, and <code>unless</code> (the intuitive opposite of <code>if</code>). Code can be written as multi-line blocks with <code>: ... end</code>, concise single-line statements (<code>if cond show ...</code>), or trailing postfix statement modifiers (<code>show ... if cond</code>).</p>
     ),
-    code: `
-let power be 50
+    code: `## CONTROL FLOW & STATEMENT MODIFIERS
+   Blocks, single-line conditionals, and postfix modifiers.
 
-# A multi-line block requires a colon and an 'end'
-if power > 70:
-  show "You are very strong."
-  show "You are ready for battle."
+let power be 85
+
+# Multi-line block
+if power >= 90:
+  show "Rank: S-Class"
+else if power >= 75:
+  show "Rank: A-Class"
+else:
+  show "Rank: B-Class"
 end
 
-# A single statement doesn't need a block!
-if power <= 70 show "You are weak."
+# Single-line if statement
+if power > 50 show "Power is sufficient!"
 
-# 'unless' is the exact opposite of 'if'
-unless power > 70 show "You need to train more!"`
+# 'unless' is the opposite of 'if'
+unless power < 50 show "Status: Combat Ready."
+
+# Postfix statement modifiers
+show "Unleashing ultimate move!" if power >= 80
+show "Need more energy!" unless power >= 100
+`
   },
   {
-    title: "Chained Comparisons",
+    title: "Chained Comparisons & Sticky Subjects",
     content: (
-      <p>Now let's supercharge our control flow! In standard programming, checking if a number is between two values forces you to write the variable twice (like <code>if power &gt; 10 and power &lt;= 100</code>). Moon allows you to write <Tooltip word="chained comparisons" /> naturally, exactly how you would write it in math.</p>
+      <p>Write natural mathematical inequalities with <Tooltip word="chained comparisons" /> (like <code>50 &lt;= power &lt; 100</code>). Moon also features <Tooltip word="sticky subjects" />, automatically remembering the subject across <code>and</code> / <code>or</code> operators so you don't have to repeat variable names!</p>
     ),
-    code: `let power be 50
+    code: `## CHAINED COMPARISONS & STICKY SUBJECTS
+   Mathematical chains and automatic subject retention.
 
-if 10 < power <= 100:
-  show "Power is in the sweet spot."
-end`
-  },
-  {
-    title: "Sticky Subjects",
-    content: (
-      <p>Moon has another trick for logical operations called <Tooltip word="sticky subjects" />. When you use <code>and</code> or <code>or</code>, Moon remembers the variable you were just talking about! This means you don't have to repeat the variable name, saving you time and making the code read beautifully.</p>
-    ),
-    code: `let n be 5
-let role be "admin"
+let power be 75
 
-# Notice we don't have to say 'and n is not 10'!
+# Chained mathematical comparison
+if 50 <= power < 100:
+  show "Power is within optimal operational limits."
+end
+
+let n be 7
+let role be "moderator"
+
+# Sticky subjects automatically reuse 'n'
 if n > 0 and is not 10:
-  show "n is greater than 0, and n is not 10!"
+  show "n is positive and not equal to 10."
 end
 
-# Works perfectly with 'or' as well!
+# Sticky subjects with 'or'
 if role is "admin" or is "moderator":
-  show "You have elevated privileges."
-end`
+  show "Access granted to administration console."
+end
+`
   },
   {
-    title: "Inline Conditions",
+    title: "Inline Ternary Expressions",
     content: (
-      <p>Writing a full <code>if/else</code> block just to assign a single variable can feel bulky. Moon provides a quick, one-line shortcut. It reads perfectly as an English sentence: "Let this variable be X if the condition is true, else let it be Y".</p>
+      <p>Need to pick a value based on a condition without writing a full <code>if/else</code> block? Moon provides fluid inline ternary expressions that read like spoken English: <code>let result be X if condition else Y</code>.</p>
     ),
-    code: `let score be 85
-let grade be "Pass" if score >= 50 else "Fail"
+    code: `## TERNARY EXPRESSIONS
+   Clean inline value selection.
 
-show "Your grade is: \`grade\`"`
+let score be 85
+let grade be "Distinction" if score >= 80 else "Pass"
+show "Result: \`grade\`"
+
+let is_vip be true
+let discount be 25 if is_vip else 0
+show "Discount applied: \`discount\`%"
+`
   },
   {
-    title: "Condition-Based Loops (While/Until)",
+    title: "Loops (While, Until, For)",
     content: (
-      <p>If you want a block of code to repeat continuously based on a condition, you can use <code>while</code>. Moon also provides its intuitive opposite, <code>until</code>. These loops read naturally and are perfect for when you don't know exactly how many times the loop will run!</p>
+      <p>Repeat logic with <code>while</code>, <code>until</code> (runs until a condition turns true), and <code>for</code> loops. For loops support iterating over collections with <code>in</code>, numeric ranges with <code>from</code>, and automatic value &amp; index unpacking!</p>
     ),
-    code: `let p be 1
+    code: `## LOOPS
+   Iterate over items, ranges, and conditions with while, until, and for.
 
-until p > 3:
-  show "Loop tick: \`p\`"
-  update p + 1
+let tick be 1
+until tick > 3:
+  show "Until tick: \`tick\`"
+  update tick + 1
 end
 
-let hp be 10
+let hp be 15
 while hp > 0:
-  show "Health is \`hp\`, still fighting!"
+  show "Fighting boss... HP: \`hp\`"
   update hp - 5
-end`
-  },
-  {
-    title: "For Loops",
-    content: (
-      <>
-        <p>When you have a collection or range, you usually want to loop over it. Moon provides incredibly flexible <code>for</code> loops.</p>
-        <ul className="list-disc pl-6 my-4 space-y-2 text-slate-300">
-          <li>The word <code>each</code> is completely optional—use it if it helps the sentence read better!</li>
-          <li>Use <code>in</code> when iterating over a collection (like a list), and <code>from</code> when iterating over a numeric range.</li>
-          <li>You can unpack multiple values at once! E.g. <code>for value, <Tooltip word="index">index</Tooltip> in ...</code> to grab both the item and its numbered position.</li>
-        </ul>
-      </>
-    ),
-    code: `let items be ["apple", "banana"]
-
-# Unpacking both the value and its index
-for each food, i in items:
-  show "Item \`i\` is \`food\`."
 end
 
-# 'each' is optional! Notice 'from' for ranges:
-for i from 1 to 3:
-  show "Count: \`i\`"
-end`
+let heroes be [ "Ada", "Alan", "Grace" ]
+for each hero, idx in heroes:
+  show "#\`idx\`: \`hero\`"
+end
+
+for i from 10 to 30 by 10:
+  show "Step: \`i\`"
+end
+`
   },
   {
-    title: "Comprehensions",
+    title: "Phrasal Functions & Union Types",
     content: (
-      <p>Once you've mastered loops, you can unlock the ultimate shortcut: <Tooltip word="Comprehensions" text="comprehensions" />! These allow you to rapidly build a brand new list or dictionary by filtering an existing one in just a single line of code.</p>
+      <p>Functions in Moon are declared as natural <Tooltip word="phrasal">phrasal</Tooltip> sentences using <code>let ... : ... give ... end</code>. Parameters can have explicit type annotations or flexible <Tooltip word="union types">Union Types</Tooltip> (e.g. <code>(val: Number or String)</code>) allowing functions to accept multiple distinct types seamlessly.</p>
     ),
-    code: `# Building a list of even numbers from a range
-let evens be [for each x in 1 to 10 keep x if is not 5]
-show "Evens without 5: " + evens
+    code: `## PHRASAL FUNCTIONS & UNION TYPES
+   Natural phrasal signatures and flexible union types.
 
-# Building a dictionary from a list, using unpacking!
-let data be ["alpha", "beta"]
-let dict be {
-  for each file, index in data:
-    keep file: index * 10
+let greet (person: String) with title (title: String):
+  give "Greetings, \`title\` \`person\`!"
+end
+
+show greet "Lovelace" with title "Lady"
+
+# Union types: accept either Number or String
+let format value (val: Number or String):
+  give "Formatted: [ \`val\` ]"
+end
+
+show format value 42
+show format value "Moon Language"
+`
+  },
+  {
+    title: "Infix Phrases & Custom Operators",
+    content: (
+      <p>Moon allows you to define custom <Tooltip word="infix">infix phrases</Tooltip> and argument-led operations where the first argument leads the expression (like <code>let (s: String) repeated (n: Number) times:</code>), providing extreme expressiveness that blends right into natural language.</p>
+    ),
+    code: `## INFIX PHRASES & ARGUMENT-LED OPERATORS
+   Define fluid infix expressions with leading argument receivers.
+
+let (s: String) repeated (n: Number) times:
+  let result be ""
+  for i from 1 to n:
+    add s to result
   end
+  give result
+end
+
+show "Echo! " repeated 3 times
+
+let (s: String) is a palindrome:
+  let rev be join (reverse s as List) with ""
+  give s = rev
+end
+
+let word1, word2 be "racecar", "moon"
+show "Is '\`word1\`' a palindrome? \`word1 is a palindrome\`"
+show "Is '\`word2\`' a palindrome? \`word2 is a palindrome\`"
+`
+  },
+  {
+    title: "Type Blueprints & Object Semantics",
+    content: (
+      <p>Define custom structured data templates using the <code>type</code> keyword. <Tooltip word="blueprint">Blueprints</Tooltip> support default values and internal methods that access instance state using <code>my</code>. <Tooltip word="instantiate">Instantiate</Tooltip> typed objects with <code>Type {'{ property: value }'}</code>.</p>
+    ),
+    code: `## TYPE BLUEPRINTS
+   Define prototypes with default fields and internal methods.
+
+type Player:
+  name is "Anonymous",
+  health is 100,
+  mana is 50,
+
+  take damage (amount):
+    set my health to my health - amount
+    if my health < 0:
+      set my health to 0
+    end
+  end
+end
+
+let hero be Player {
+  name: "Artorias",
+  health: 120
 }
-show dict`
+
+show "Hero: \`hero's name\` with \`hero's health\` HP"
+hero's take damage 45
+show "Hero HP after battle: \`hero's health\`"
+`
   },
   {
-    title: "Blueprints, Instantiation & Cloning",
+    title: "Possessive Extension Methods",
     content: (
-      <p>Now we enter advanced territory! If lists and dictionaries aren't enough, you can create your own custom data <Tooltip word="blueprint">blueprints</Tooltip> using the <code>type</code> keyword. Once defined, you can <Tooltip word="instantiate">instantiate</Tooltip> them using <code>with ... end</code>. You can even embed special commands right inside the blueprint, like "active properties" which run code when you ask for them!</p>
+      <p>Add new methods and active properties to blueprints from anywhere using Moon's <Tooltip word="extension methods">possessive extension methods</Tooltip>: <code>let (receiver: Type)'s method (params): ... end</code>. These methods are invoked cleanly using the natural possessive <code>'s</code> syntax!</p>
     ),
-    code: `type Player:
-  name, health: 100,
-  my info:
-    give "\`my name\` has \`my health\` health."
-  end
+    code: `## POSSESSIVE EXTENSION METHODS
+   Extend types from outside their definition with natural 's phrasing.
+
+type Hero:
+  name is "Knight",
+  health is 80
 end
 
-let p1 be Player with name: "Emrys" end
-show p1's info`
+# Define an extension method on Hero
+let (h: Hero)'s heal (amount: Number):
+  set h's health to h's health + amount
+  give h's health
+end
+
+# Define a boolean property extension
+let (h: Hero)'s is_alive:
+  give h's health > 0
+end
+
+let player be Hero { name: "Galahad", health: 40 }
+show "Is player alive? \`player's is_alive\`"
+
+player's heal 30
+show "Healed \`player's name\` to \`player's health\` HP"
+`
   },
   {
-    title: "Phrasal Functions & Multiple Dispatch",
+    title: "Type Casting & Hydration (as)",
     content: (
-      <p>Functions in Moon are written as natural language <Tooltip word="phrasal">phrases</Tooltip>, making them incredibly easy to read. Even better, you can use <Tooltip word="Multiple Dispatch" text="multiple dispatch" /> to write the exact same phrase multiple times, but have it do completely different things depending on the <code>type</code> of data you feed it!</p>
+      <p>Explicitly convert values between types or hydrate unstructured dictionaries into typed blueprints using the <Tooltip word="type casting"><code>as</code></Tooltip> keyword (e.g. <code>"123" as Number</code>, <code>42 as String</code>, <code>rawDict as Blueprint</code>).</p>
     ),
-    code: `type Node: ip end
-type Firewall: strength end
+    code: `## TYPE CASTING & BLUEPRINT HYDRATION
+   Converting types and hydrating dictionaries into typed blueprints with 'as'.
 
-# The phrase "breach system" handles Nodes
-let breach system (target: Node):
-  show "Hacking node at \`target's ip\`!"
+let raw input be "420"
+let parsed number be raw input as Number
+show "Parsed + 10: \`parsed number + 10\`"
+
+let text be 99.5 as String
+show "Converted to string: " + text
+
+type Config:
+  theme is "Dark",
+  volume is 80
 end
 
-# The exact same phrase handles Firewalls differently!
-let breach system (target: Firewall):
-  show "Bypassing firewall with strength \`target's strength\`!"
-end
+let raw data be { theme: "Moonlight", volume: 100 }
+let typed config be raw data as Config
 
-let n be Node { ip: "192.168.1.1" }
-let fw be Firewall { strength: 1024 }
-
-breach system n
-breach system fw`
+show "Theme: \`typed config's theme\`, Volume: \`typed config's volume\`"
+`
   },
   {
-    title: "Advanced Slicing & Access",
+    title: "Standard Library Tour & Interactive I/O",
     content: (
-      <p>To wrap things up, here are some pro-tips for working with <Tooltip word="lists" />. Moon provides incredibly clean syntax for manipulating lists. You can use the <code>end</code> keyword in slices to grab everything up to the end, or even slice backwards! You can also use a quick dot-notation for grabbing items by their <Tooltip word="1-based" text="1-based" /> <Tooltip word="index">index</Tooltip> without using brackets.</p>
+      <p>Moon includes a rich standard library with built-in phrases for math, string manipulation, list operations, and the interactive <code>ask</code> command, which pauses execution to receive real-time user input in the terminal!</p>
     ),
-    code: `let items be [ 10, 20, 30, 40, 50 ]
+    code: `## STANDARD LIBRARY TOUR & INTERACTIVE I/O
+   Math phrases, string transformations, and the interactive 'ask' command.
 
-# Quick 1-indexed bracketless access
-let first be items.1
-show "First item is: \`first\`"
+# Math phrases
+show "Square root of 64: \`square root of 64\`"
+show "2 to power of 8: \`power of 2 to 8\`"
+show "Floor of 7.89: \`floor of 7.89\`"
+show "Random 1 to 10: \`random from 1 to 10\`"
 
-# Slicing with the 'end' keyword
-let rest be items[2 to end]
-show "Rest of items: \`rest\`"
+# String phrases
+let message be "  welcome to moon  "
+show "Uppercase: \`uppercase message\`"
+show "Trimmed: '\`trim message\`'"
+let parts be split "apple,banana,orange" by ","
+show "Split list: \`parts\`"
+let rejoined be join parts with " - "
+show "Joined back: \`rejoined\`"
 
-# Slicing backwards
-let backwards be items[end to 1]
-show "Backwards: \`backwards\`"`
+# Interactive prompt (ASYNCIFY in browser!)
+let user input be ask "What is your quest? "
+show "Your quest: \`user input\`"
+`
   }
 ];
-
 
 export default function Tutorial() {
   const location = useLocation();
